@@ -12,16 +12,17 @@ Download ISO containing Debian latest version and bundles non-free firmware from
 1. Preparing installation media
     1. If using Windows: - 
         1. USB - https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview
-        1. DVD - burn the downloaded ISO to a DVD
-    1. (Highly Recommended) If using Linux or MacOS use the following steps to:
-       1. Burn the ISO image to DVD using Brasero or any other image writing software or 
-       1. USB
-          1. From the terminal, check USB drive: 
+        2. DVD - burn the downloaded ISO to a DVD
+    2. (Highly Recommended) If using Linux or MacOS use the following steps to:
+        1. Burn the ISO image to DVD using Brasero or any other image writing software or 
+        2. USB
+            1. From the terminal, check USB drive: 
             ```user@my-pc > lsblk #or dmesg```
 
-        1. Linux command to write image to USB drive - 
+            2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
         ```
-        user@my-pc > cp debian-file.iso /dev/sdX #verify sdX is usb drive
+        #NB: Verify sdX is usb drive eg cp debian-12.5.0-amd64-DVD-1.iso /dev/sdc
+        user@my-pc > cp debian-file.iso /dev/sdX 
         user@my-pc > sync #ensures files are securely copied
         ```
 
@@ -33,7 +34,7 @@ Download ISO containing Debian latest version and bundles non-free firmware from
 ### Configuration of OS for Updates and Package Installations
 1. (Optional if user created was created with root privileges) - Login as root to:
    1. Start a terminal session
-   1. Add the new user you created during install as follows:
+   2. Add the new user you created during install as follows:
     ```
     sudo su - root
     adduser theusernameyoucreated sudo
@@ -44,10 +45,10 @@ Download ISO containing Debian latest version and bundles non-free firmware from
     usermod -aG sudo nameOfNewUser
     ```
 
-  1. Logout as root and login as the above user.
+  3. Logout as root and login as the above user.
 1. Check if root privileges worked: Start a Terminal session:
    1. Enter command (you will be prompted to enter your password): `sudo su - root`
-   1. If no error messages occur, then that means you’re now root!
+   2. If no error messages occur, then that means you’re now root!
 1. Editing application options:
     1. vi/vim - shell application that's ideal for experienced Linux users
         1. Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
