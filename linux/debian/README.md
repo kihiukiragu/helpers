@@ -3,73 +3,62 @@ If you’re new to Linux, welcome aboard!
 
 ## Download
 
-**NB**: If you find a broken link, see if you can locate a more current one online or let me know and I can locate one.
+**NB**: If you find a broken link, see if you can locate a more current one online create a pull request.
 
 Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): [Link: ](https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/11.6.0+nonfree/amd64/iso-dvd/)<https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/>
+
 ### Installation
 #### Steps
-1. If using Windows:
-   1. USB option - Download and install UNetbootin and then use it to create a bootable USB drive with Debian ISO you downloaded above. 
-   1. DVD - burn the ISO to a DVD
-1. If using Linux use the following steps to:
-   1. Burn the ISO image to DVD using Brasero or any other image writing software or 
-   1. USB
-      1. From the terminal, check USB drive: 
-        ```user@my-pc > lsblk #or dmesg```
+1. Preparing installation media
+    1. If using Windows: - 
+        1. USB - https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview
+        1. DVD - burn the downloaded ISO to a DVD
+    1. (Highly Recommended) If using Linux or MacOS use the following steps to:
+       1. Burn the ISO image to DVD using Brasero or any other image writing software or 
+       1. USB
+          1. From the terminal, check USB drive: 
+            ```user@my-pc > lsblk #or dmesg```
 
-
-1. Linux command to write image to USB drive - 
-
-    ```
-    user@my-pc > cp debian-file.iso /dev/sdX #verify sdX is usb drive
-    user@my-pc > sync #ensures files are securely copied
-    ```
+        1. Linux command to write image to USB drive - 
+        ```
+        user@my-pc > cp debian-file.iso /dev/sdX #verify sdX is usb drive
+        user@my-pc > sync #ensures files are securely copied
+        ```
 
 1. Ensure you can boot to USB/DVD on the computer where Debian is to be installed
 1. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts
-1. (Optional - for those using ***Download Option #2*** above) - You might be prompted to insert removable media e.g. USB containing missing non-free firmware. Insert the USB thumb drive and press continue. If for some reason the non-free firmware is not present, skip this step and figure out after installation how to install your firmware so that you can utilize the device fully. Ethernet is always an option if WiFi does not work initially.
-1. Remember to note down the root credentials (username & password) during installations. You will be prompted to create a new user. You can give this user admin / root privileges (can’t remember this for sure but you might also be able to give admin rights to this user at this point!!!).
+1. Remember to note down the root credentials (username & password) during installations. You will be prompted to create a new user.
 1. Once installation is complete, proceed to configure your OS for updates etc
-
-#### (Troubleshooting) Post Installation Blank Screen
-1. Likely causes:
-   1. Missing display drivers
-   1. Incomplete install of display drivers
-1. Potential solutions:
-   1. Edit Grub on start:
-      1. Select a Grub option but but do NOT press “enter”
-      1. Press ‘e’ to edit
-      1. Look for a line ending in splash quiet and edit it so it has somewhere in the line: nomodeset
-      1. If above does not work also try pci=nomsi
-1. Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
-
-```
-   apt-key export 210976F2 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pgadmin.gpg
-   apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.gpg
-```
 
 ### Configuration of OS for Updates and Package Installations
 1. (Optional if user created was created with root privileges) - Login as root to:
    1. Start a terminal session
    1. Add the new user you created during install as follows:
-- sudo su - root
-- adduser theusernameyoucreated sudo
-- OR
-- usermod -aG sudo nameOfNewUser
-- Use: /sbin/usermod if you get error: “usermod command not found”
+    ```
+    sudo su - root
+    adduser theusernameyoucreated sudo
+    ```
+    OR
+    ```
+    # Add an existing user to list of sudoers
+    usermod -aG sudo nameOfNewUser
+    ```
+
   1. Logout as root and login as the above user.
-1. Check if root privileges worked: Start a terminal session:
-   1. Enter command (you will be prompted to enter your password): sudo su - root
+1. Check if root privileges worked: Start a Terminal session:
+   1. Enter command (you will be prompted to enter your password): `sudo su - root`
    1. If no error messages occur, then that means you’re now root!
-1. Install vim: For some reason vim is usually not installed fully: sudo apt install vim
-1. Update /etc/apt/sources.list
+1. Editing application options:
+    1. vi/vim - shell application that's ideal for experienced Linux users
+        1. Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
+        2. Start: `vi /path/to/file/to/be/edited`
+    2. gedit - ideal for beginners
+1. Edit sources file located at: `/etc/apt/sources.list`
    1. Switch to root mode (see #2 above)
-   1. Type command: gedit /etc/apt/sources.list
-   1. Comment out DVD source as update application will keep asking for DVD to be inserted
-      1. Comment out a line by adding # at the beginning of the DVD source line
-      1. Eventually delete this line as it will not be necessary in the future.
-   1. You can insert additional sources for updates here
-   1. It should look like:
+   2. Type command: `gedit /etc/apt/sources.list` or `vi /etc/apt/sources.list`
+   3. Comment out DVD source as update application will keep asking for DVD to be inserted. Comment out a line by adding `#` at the beginning of the DVD source line. You can also just delete the line
+   4. You can insert additional sources for updates here
+   5. It should look like:
     ```
     deb http://deb.debian.org/debian/ bookworm main
     deb-src http://deb.debian.org/debian/ bookworm main
@@ -81,58 +70,33 @@ Download ISO containing Debian latest version and bundles non-free firmware from
     deb-src http://deb.debian.org/debian bookworm-backports main
     ```
 
-1. Run updates on your OS:
-   1. As root:
-      1. Type command: apt-get update
-      1. Type command: apt-get dist-upgrade
-   1. As regular user (sudo is pre-pended for root/admin tasks when not running as root):
-      1. Type command: sudo apt-get update
-      1. Type command: sudo apt-get dist-upgrade
-1. (Mostly for Laptops with Wi-Fi) Install WiFi package if wasn’t installed during OS install
-   1. Download from any of these sites listed here a \*.deb file: <https://packages.debian.org/buster/all/firmware-linux-nonfree/download>
-   1. Install it using:
-        ```
-        sudo dpkg -i /path/to/deb/file
-        sudo apt-get install -f\
-        ```
-1. Install ntp(keep time synced with internet servers): `sudo apt install ntp -y`
-1. Install curl (helpful for installing certain packages and testing rest API’s): `sudo apt install` curl`
-1. Install git: `sudo apt install git`
-
-1. **TBD**: Update launch pad at bottom of screen
-1. Delete duplicate applications in menus using “Application Finder”
-1. Detect a second monitor (say using NVIDIA adapter): 
-   1. Add backports in /etc/apt/sources.list
-    ```
-    # bookwork-backports
-    deb http://httpredir.debian.org/debian stretch-backports main contrib non-free
-    ```
-   1. Run apt-get update
-   1. Install nvidia: apt-get install -t stretch-backports nvidia-driver
+1. Run updates on your Debian OS installation:
+    1. Start a Terminal session
+    2. Fetch latest version of the package list from Debian repo and 3rd party repos: `sudo apt update`
+    3. Download and install for any outdated packages: `sudo apt dist-upgrade`
 
 
 **(Optional) Change default Editor to vim**
 
 1. Type: `sudo update-alternatives --config editor`
-1. Select vim.basic
+1. Select `vim.basic`
 
 ### Install Google Chrome
 Debian comes with Firefox installed but you can add Chrome if you like: <https://www.linuxcapable.com/how-to-install-google-chrome-on-debian-linux/>
 
 1. Open terminal
-1. Append the sources list to include the Google Chrome repository with the following command:
+2. Append the sources list to include the Google Chrome repository with the following command:
 
     ```
     user@my-pc > cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
     ```
-1. Add a signing key as follows:
+3. Add a signing key as follows:
     ```
     user@my-pc > wget -O- https://dl.google.com/linux/linux\_signing\_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
     ```
-1. Run: `sudo apt-get update`
-1. Run: `sudo apt-get install google-chrome-stable`
+4. Run: `sudo apt-get update`
+5. Run: `sudo apt-get install google-chrome-stable`
 
-Install
 
 ### Terminal Application Customizations (Optional but recommended)
 #### Install ZSH and Oh-My-Zsh (Optional)
@@ -190,28 +154,29 @@ Install
     
 ### Server Setup
 #### Install & nginx & certbot and SSL certs
-1. Install nginx: sudo apt install nginx
-1. Install certbot python plugin: sudo apt install python3-certbot-nginx
-1. Generate SSL certs: certbot --nginx certonly -d domain.quatrixglobal.com
+1. Install nginx: `sudo apt install nginx`
+1. Install certbot python plugin: `sudo apt install python3-certbot-nginx`
+1. Generate SSL certs: `certbot --nginx certonly -d domain.example.com`
 
 #### <a name="_ybuv6ma0em4e"></a>Allow User to sudo without password
-1. Create a file in /etc/sudoers.d
-1. Edit the file and put the following rule: username ALL=(ALL) NOPASSWD: ALL
+1. Create a file in `/etc/sudoers.d`
+1. Edit the file and put the following rule: `username ALL=(ALL) NOPASSWD: ALL`
 
 #### <a name="_u0be09k83nct"></a>Securing SSH Port and Configuration
 1. Change default ssh port:
-1. Edit configuration file: vi /etc/ssh/sshd\_config
+1. Edit configuration file: `vi /etc/ssh/sshd\_config`
 
-1. Disable Root login: PermitRootLogin no
-1. Restart sshd: service sshd restart
-#### <a name="_dan3vnoy4ss"></a>Server Applications Installation:
+1. Disable Root login: `PermitRootLogin no`
+1. Restart sshd: `service sshd restart`
+
+#### Server Applications Installation:
 1. Install PostgreSQL 15
-   1. Add Repo: wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-   1. Add repo to Debian repo lists folder: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb\_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
-   1. Install psql server and client: apt -y install postgresql-15
+   1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
+   1. Add repo to Debian repo lists folder: `echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb\_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list`
+   1. Install psql server and client: `apt -y install postgresql-15`
    1. (Recommended) Secure user postgres - TBD
 1. Install certbot & nginx plugin (for TLS certs): 
-   1. Install certbot: apt install certbot
+   1. Install certbot: `apt install certbot`
    1. apt install python-certbot-nginx
    1. Generate cert: certbot --nginx certonly -d erp.mydomainname.com
 1. Install Nginx:
@@ -233,8 +198,8 @@ Install
 1. AnyDesk
 
 
-### <a name="_tlm8qg31jm70"></a>Software Development Setup
-#### <a name="_t2d1iu7m6o99"></a>**Install Dev Tools:**
+### Software Development Setup
+#### **Install Dev Tools:**
 1. Install git: sudo apt-get install git
 1. Configure:
    1. git config --global user.email “<YourEmail@email.com>”
@@ -276,29 +241,34 @@ Install
    1. Create Icon:
       1. ` `sudo vi /usr/share/applications/eclipse.desktop
       1. Copy and paste ini type of info: 
-
-         [Desktop Entry]
-
-         Encoding=UTF-8
-
-         Name=Eclipse 4.7
-
-         Comment=Eclipse Neon
-
-         Exec=/usr/bin/eclipse
-
-         Icon=/usr/eclipse/icon.xpm
-
-         Categories=Application;Development;Java;IDE
-
-         Version=1.0
-
-         Type=Application
-
-         Terminal=0
-
+        ```
+        [Desktop Entry]
+        Encoding=UTF-8
+        Name=Eclipse 4.7
+        Comment=Eclipse Neon
+        Exec=/usr/bin/eclipse
+        Icon=/usr/eclipse/icon.xpm
+        Categories=Application;Development;Java;IDE
+        Version=1.0
+        Type=Application
+        Terminal=0
+        ```
       1. Save and exit
 
 
+#### (Troubleshooting) Post Debian Installation Blank Screen
+1. Likely causes:
+   1. Missing display drivers
+   1. Incomplete install of display drivers
+1. Potential solutions:
+   1. Edit Grub on start:
+      1. Select a Grub option but but do NOT press “enter”
+      1. Press ‘e’ to edit
+      1. Look for a line ending in splash quiet and edit it so it has somewhere in the line: nomodeset
+      1. If above does not work also try pci=nomsi
+1. Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
 
-
+```
+   apt-key export 210976F2 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pgadmin.gpg
+   apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.gpg
+```
