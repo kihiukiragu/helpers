@@ -1,11 +1,17 @@
-# **Debian 12.X (Bookworm) Installation Guide**
+# Debian 12.X (Bookworm) Installation Guide
 If you’re new to Linux, welcome aboard!
 
-## Download
+## Download Debian
 
 **NB**: If you find a broken link, see if you can locate a more current one online create a pull request.
 
-Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): [Link: ](https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/11.6.0+nonfree/amd64/iso-dvd/)<https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/>
+Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): [Link: ] https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/
+
+1. Windows - download it using your prefered download manager or browser (Chrome / Firefox)
+2. Linux command line download -
+```
+wget -c https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/debian-12.5.0-amd64-DVD-1.iso
+```
 
 ### Installation
 #### Steps
@@ -21,7 +27,7 @@ Download ISO containing Debian latest version and bundles non-free firmware from
 
             2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
             ```
-            #NB: Verify sdX is usb drive eg cp debian-12.5.0-amd64-DVD-1.iso /dev/sdc
+            #NB: Verify sdX is the usb drive you wish to create a bootable from eg cp debian-12.5.0-amd64-DVD-1.iso /dev/sdc
             user@my-pc > cp debian-file.iso /dev/sdX
             user@my-pc > sync #ensures files are securely copied
             ```
@@ -75,29 +81,6 @@ Download ISO containing Debian latest version and bundles non-free firmware from
     1. Start a Terminal session
     2. Fetch latest version of the package list from Debian repo and 3rd party repos: `sudo apt update`
     3. Download and install for any outdated packages: `sudo apt dist-upgrade`
-
-
-## **(Optional) Change default Editor to vim**
-
-1. Type: `sudo update-alternatives --config editor`
-1. Select `vim.basic`
-
-## Install Google Chrome
-Debian comes with Firefox installed but you can add Chrome if you like: <https://www.linuxcapable.com/how-to-install-google-chrome-on-debian-linux/>
-
-1. Open terminal
-2. Append the sources list to include the Google Chrome repository with the following command:
-
-    ```
-    user@my-pc > cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
-    ```
-3. Add a signing key as follows:
-    ```
-    user@my-pc > wget -O- https://dl.google.com/linux/linux_signing_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
-    ```
-4. Run: `sudo apt-get update`
-5. Run: `sudo apt-get install google-chrome-stable`
-
 
 ## Terminal Application Customizations (Optional but recommended)
 ### Install ZSH and Oh-My-Zsh (Optional)
@@ -153,6 +136,27 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
     sudo -u root zsh
     ```
 
+### (Optional) Change default Editor to vim
+1. Type: `sudo update-alternatives --config editor`
+2. Select `vim.basic`
+
+## Install Google Chrome
+Debian comes with Firefox installed but you can add Chrome if you like: <https://www.linuxcapable.com/how-to-install-google-chrome-on-debian-linux/>
+
+1. Open terminal
+2. Append the sources list to include the Google Chrome repository with the following command:
+
+    ```
+    user@my-pc > cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
+    ```
+3. Add a signing key as follows:
+    ```
+    user@my-pc > wget -O- https://dl.google.com/linux/linux_signing_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
+    ```
+4. Run: `sudo apt-get update`
+5. Run: `sudo apt-get install google-chrome-stable`
+
+
 ## Server Setup
 ### Install & nginx & certbot and SSL certs
 1. Install nginx: `sudo apt install nginx`
@@ -193,14 +197,14 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
    3. Check nginx status: `systemctl status nginx`
 
 ## Network and Printing Setup
-### **Configure Internet Sharing (Share WiFi via Ethernet Port)**
+### Configure Internet Sharing (Share WiFi via Ethernet Port)
 1. Leave WiFi connection untouched
 2. Edit the Ethernet connection (Wired) and change IPv4 setting to “Shared to other Computers”
 3. Restart network manager service if need be.
 
-### **Configure VPN eg by Keep Solids (VPN Unlimited)**
+### Configure VPN eg by Keep Solids (VPN Unlimited)
 
-### **Install & Configure Printing, LibreOffice:**
+### Install & Configure Printing, LibreOffice:
 1. Setting up printing: <https://wiki.debian.org/SystemPrinting>
 2. Install LibreOffice (if it’s not installed already):
    1. sudo apt update
@@ -209,7 +213,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 
 
 ## Software Development Setup
-### **Install Dev Tools:**
+### Install Dev Tools:
 1. Install git: sudo apt-get install git
 2. Configure:
    ```
