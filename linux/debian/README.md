@@ -77,12 +77,12 @@ Download ISO containing Debian latest version and bundles non-free firmware from
     3. Download and install for any outdated packages: `sudo apt dist-upgrade`
 
 
-### **(Optional) Change default Editor to vim**
+## **(Optional) Change default Editor to vim**
 
 1. Type: `sudo update-alternatives --config editor`
 1. Select `vim.basic`
 
-### Install Google Chrome
+## Install Google Chrome
 Debian comes with Firefox installed but you can add Chrome if you like: <https://www.linuxcapable.com/how-to-install-google-chrome-on-debian-linux/>
 
 1. Open terminal
@@ -99,8 +99,8 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 5. Run: `sudo apt-get install google-chrome-stable`
 
 
-### Terminal Application Customizations (Optional but recommended)
-#### Install ZSH and Oh-My-Zsh (Optional)
+## Terminal Application Customizations (Optional but recommended)
+### Install ZSH and Oh-My-Zsh (Optional)
 1. Install zsh and dependencies (zsh is the base of oh-my-zsh):
     ```
     sudo apt install zsh curl git fonts-powerline powerline
@@ -153,23 +153,23 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
     sudo -u root zsh
     ```
 
-### Server Setup
-#### Install & nginx & certbot and SSL certs
+## Server Setup
+### Install & nginx & certbot and SSL certs
 1. Install nginx: `sudo apt install nginx`
 2. Install certbot python plugin: `sudo apt install python3-certbot-nginx`
 3. Generate SSL certs: `certbot --nginx certonly -d domain.example.com`
 
-#### Allow User to sudo without password
+### Allow User to sudo without password
 1. Create a file in `/etc/sudoers.d`
 2. Edit the file and put the following rule: `username ALL=(ALL) NOPASSWD: ALL`
 
-#### Securing SSH Port and Configuration
+### Securing SSH Port and Configuration
 1. Change default ssh port:
 2. Edit configuration file: `vi /etc/ssh/sshd_config`
 3. Disable Root login: `PermitRootLogin no`
 4. Restart sshd: `service sshd restart`
 
-#### Server Applications Installation:
+### Server Applications Installation:
 1. Install PostgreSQL 15
    1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
    2. Add repo to Debian repo lists folder:
@@ -179,28 +179,28 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
    3. Install psql server and client: `apt -y install postgresql-15`
    4. (Recommended) Secure user postgres - TBD
    5. (Recommended) Improve postgres performance - TBD
-1. Install certbot & nginx plugin (for TLS certs):
+2. Install certbot & nginx plugin (for TLS certs):
    1. Install certbot and python certbot nginx plugin:
    ```
    apt install certbot python-certbot-nginx
    ```
    2. Generate certificate as follows: `certbot --nginx certonly -d erp.mydomainname.com`
-1. Install Nginx:
+3. Install Nginx:
    1. Install: `apt install nginx`
    2. Adjust Firewall:
       1. Allow HTTP: `ufw allow 'Nginx Full'`
       1. Check status: `ufw status`
    3. Check nginx status: `systemctl status nginx`
 
-### Network and Printing Setup
-#### **Configure Internet Sharing (Share WiFi via Ethernet Port)**
+## Network and Printing Setup
+### **Configure Internet Sharing (Share WiFi via Ethernet Port)**
 1. Leave WiFi connection untouched
 2. Edit the Ethernet connection (Wired) and change IPv4 setting to “Shared to other Computers”
 3. Restart network manager service if need be.
 
-#### **Configure VPN eg by Keep Solids (VPN Unlimited)**
+### **Configure VPN eg by Keep Solids (VPN Unlimited)**
 
-#### **Install & Configure Printing, LibreOffice:**
+### **Install & Configure Printing, LibreOffice:**
 1. Setting up printing: <https://wiki.debian.org/SystemPrinting>
 2. Install LibreOffice (if it’s not installed already):
    1. sudo apt update
@@ -208,8 +208,8 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 3. AnyDesk
 
 
-### Software Development Setup
-#### **Install Dev Tools:**
+## Software Development Setup
+### **Install Dev Tools:**
 1. Install git: sudo apt-get install git
 2. Configure:
    ```
@@ -271,8 +271,8 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
         ```
       3. Save and exit
 
-### (Troubleshooting) Post Debian Installation
-####  Blank Screen
+## (Troubleshooting) Post Debian Installation
+###  Blank Screen
 1. Likely causes:
    1. Missing display drivers
    2. Incomplete install of display drivers
@@ -283,7 +283,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
       3. Look for a line ending in splash quiet and edit it so it has somewhere in the line: nomodeset
       4. If above does not work also try pci=nomsi
 
-####  Key Ring Issues
+###  Key Ring Issues
 Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
 
 ```
