@@ -209,7 +209,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 2. Install LibreOffice (if it’s not installed already):
    1. sudo apt update
    1. sudo apt install libreoffice
-3. AnyDesk
+3. AnyDesk (Use the following link, then convert the keyring as shown later in this guide)- http://deb.anydesk.com/howto.html
 
 
 ## Software Development Setup
@@ -288,9 +288,20 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
       4. If above does not work also try pci=nomsi
 
 ###  Key Ring Issues
+
+List existing keyrings using `apt-key list` eg:
+```
+apt-key list | grep anydesk
+```
+
 Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
 
 ```
 apt-key export 210976F2 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pgadmin.gpg
 apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.gpg
+```
+
+Delete outdate or invalid keyrings:
+```
+apt-key del "DAC8....."
 ```
