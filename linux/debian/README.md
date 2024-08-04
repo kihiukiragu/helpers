@@ -87,23 +87,23 @@ wget -c https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/debian-1
 #### Update Debian 9.X Stretch OR (Upgrade Debian 7.X Jessie to Debian 8.X Stretch)
 
 ```
-deb http://archive.debian.org/debian/ stretch main
-deb-src http://archive.debian.org/debian/ stretch main
-deb http://archive.debian.org/debian/ stretch-updates main
-deb-src http://archive.debian.org/debian/ stretch-updates main
-deb http://archive.debian.org/debian-security stretch/updates main
-deb-src http://archive.debian.org/debian-security stretch/updates main
+deb http://archive.debian.org/debian/ stretch-updates main contrib non-free
+deb-src http://archive.debian.org/debian/ stretch-updates main contrib non-free
+deb http://archive.debian.org/debian stretch main contrib non-free
+deb-src http://archive.debian.org/debian stretch/updates main contrib non-free
+deb http://archive.debian.org/debian-security/ stretch/updates main contrib non-free
+deb-src http://archive.debian.org/debian-security/ stretch/updates main contrib non-free
 ```
 
 #### Update old instance of Buster OR (Upgrade from Debian 9.X Stretch to Debian 10.X Buster)
 
 ```
-deb http://archive.debian.org/debian/ buster main
-deb-src http://archive.debian.org/debian/ buster main
-deb http://archive.debian.org/debian/ buster-updates main
-deb-src http://archive.debian.org/debian/ buster-updates main
-deb http://archive.debian.org/debian-security buster/updates main
-deb-src http://archive.debian.org/debian-security buster/updates main
+deb http://archive.debian.org/debian/ buster-updates main contrib non-free
+deb-src http://archive.debian.org/debian/ buster-updates main contrib non-free
+deb http://archive.debian.org/debian buster main contrib non-free
+deb-src http://archive.debian.org/debian buster/updates main contrib non-free
+deb http://archive.debian.org/debian-security/ buster/updates main contrib non-free
+deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 ```
 
 ## Terminal Application Customizations (Optional but recommended)
