@@ -82,6 +82,30 @@ wget -c https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/debian-1
     2. Fetch latest version of the package list from Debian repo and 3rd party repos: `sudo apt update`
     3. Download and install for any outdated packages: `sudo apt dist-upgrade`
 
+### Older Debian Versions eg Stretch and Buster
+
+#### Update Debian 9.X Stretch OR (Upgrade Debian 7.X Jessie to Debian 8.X Stretch)
+
+```
+deb http://archive.debian.org/debian/ stretch main
+deb-src http://archive.debian.org/debian/ stretch main
+deb http://archive.debian.org/debian/ stretch-updates main
+deb-src http://archive.debian.org/debian/ stretch-updates main
+deb http://archive.debian.org/debian-security stretch/updates main
+deb-src http://archive.debian.org/debian-security stretch/updates main
+```
+
+#### Update old instance of Buster OR (Upgrade from Debian 9.X Stretch to Debian 10.X Buster)
+
+```
+deb http://archive.debian.org/debian/ buster main
+deb-src http://archive.debian.org/debian/ buster main
+deb http://archive.debian.org/debian/ buster-updates main
+deb-src http://archive.debian.org/debian/ buster-updates main
+deb http://archive.debian.org/debian-security buster/updates main
+deb-src http://archive.debian.org/debian-security buster/updates main
+```
+
 ## Terminal Application Customizations (Optional but recommended)
 ### Install ZSH and Oh-My-Zsh (Optional)
 1. Install zsh and dependencies (zsh is the base of oh-my-zsh):
