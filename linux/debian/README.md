@@ -310,19 +310,24 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 
 ###  Key Ring Issues
 
-List existing keyrings using `apt-key list` eg:
+Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
+
+List existing keyrings using `apt-key list` but filter for the last 8 chars of the older existing key eg:
 ```
-apt-key list | grep anydesk
+apt-key list | grep anydesk -B 3 | grep -Eo '[A-Z0-9]{4} [A-Z0-9]{4}$' | sed 's/ //g'
 ```
 
-Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
+Export existing key to `trusted.gpg.d` folder:
 
 ```
 apt-key export 210976F2 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pgadmin.gpg
 apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.gpg
+apt-key export 77E11517 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/php.gpg
 ```
 
 Delete outdate or invalid keyrings:
 ```
 apt-key del "DAC8....."
 ```
+
+For `php`, if the above doesn't work, you might need to: delete and add the key again
