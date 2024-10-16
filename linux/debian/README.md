@@ -3,34 +3,34 @@ If you’re new to Linux, welcome aboard!
 
 ## Download Debian
 
-**NB**: If you find a broken link, see if you can locate a more current one online create a pull request.
-
-Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): [Link: ] https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/
+Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): Link: https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/
 
 1. Windows - download it using your prefered download manager or browser (Chrome / Firefox)
-2. Linux command line download -
+2. Linux command line download:
+> [!NOTE]
+> If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-wget -c https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/debian-12.5.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-12.7.0-amd64-DVD-1.iso
 ```
 
 ### Installation
 #### Steps
 1. Preparing installation media
     1. If using Windows:-
-        1. USB - https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview
-        2. DVD - burn the downloaded ISO to a DVD
+       1. USB - https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview
+       2. DVD - burn the downloaded ISO to a DVD
     2. (Highly Recommended) If using Linux or MacOS use the following steps to:
-        1. Burn the ISO image to DVD using Brasero or any other image writing software or
-        2. USB
-            1. From the terminal, check USB drive:
-            ```user@my-pc > lsblk #or dmesg```
+       1. Burn the ISO image to DVD using Brasero or any other image writing software or
+       2. USB
+          1. From the terminal, check USB drive:
+             ```user@my-pc > lsblk #or dmesg```
 
-            2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
-            ```
-            #NB: Verify sdX is the usb drive you wish to create a bootable from eg cp debian-12.5.0-amd64-DVD-1.iso /dev/sdc
-            user@my-pc > cp debian-file.iso /dev/sdX
-            user@my-pc > sync #ensures files are securely copied
-            ```
+          2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
+             ```
+             #NB: Verify sdX is the usb drive you wish to create a bootable from eg cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
+             cp debian-file.iso /dev/sdX
+             sync #ensures files are securely copied
+             ```
 
 2. Ensure you can boot to USB/DVD on the computer where Debian is to be installed
 3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts
@@ -41,41 +41,42 @@ wget -c https://cdimage.debian.org/cdimage/release/12.5.0/amd64/iso-dvd/debian-1
 1. (Optional if user created was created with root privileges) - Login as root to:
    1. Start a terminal session
    2. Add the new user you created during install as follows:
-    ```
-    sudo su - root
-    adduser theusernameyoucreated sudo
-    ```
-    OR
-    ```
-    # Add an existing user to list of sudoers
-    usermod -aG sudo nameOfNewUser
-    ```
+      ```
+      sudo su - root
+      adduser theusernameyoucreated sudo
+      ```
+      OR
+      ```
+      # Add an existing user to list of sudoers
+      usermod -aG sudo nameOfNewUser
+      ```
 
   3. Logout as root and login as the above user.
 2. Check if root privileges worked: Start a Terminal session:
    1. Enter command (you will be prompted to enter your password): `sudo su - root`
    2. If no error messages occur, then that means you’re now root!
 3. Editing application options:
-    1. vi/vim - shell application that's ideal for experienced Linux users
-        1. Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
-        2. Start: `vi /path/to/file/to/be/edited`
-    2. gedit - ideal for beginners
+   1. vi/vim - shell application that's ideal for experienced Linux users
+      - Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
+      - Start: `vi /path/to/file/to/be/edited`
+   2. gedit - ideal for beginners
 4. Edit sources file located at: `/etc/apt/sources.list`
    1. Switch to root mode (see #2 above)
    2. Type command: `gedit /etc/apt/sources.list` or `vi /etc/apt/sources.list`
    3. Comment out DVD source as update application will keep asking for DVD to be inserted. Comment out a line by adding `#` at the beginning of the DVD source line. You can also just delete the line
    4. You can insert additional sources for updates here
    5. It should look like:
-    ```
-    deb http://deb.debian.org/debian/ bookworm main
-    deb-src http://deb.debian.org/debian/ bookworm main
-    deb http://deb.debian.org/debian/ bookworm-updates main
-    deb-src http://deb.debian.org/debian/ bookworm-updates main
-    deb http://security.debian.org/debian-security bookworm-security main
-    deb-src http://security.debian.org/debian-security bookworm-security main
-    deb http://deb.debian.org/debian bookworm-backports main
-    deb-src http://deb.debian.org/debian bookworm-backports main
-    ```
+      ```
+      deb http://deb.debian.org/debian/ bookworm main
+      deb-src http://deb.debian.org/debian/ bookworm main
+      deb http://deb.debian.org/debian/ bookworm-updates main
+      deb-src http://deb.debian.org/debian/ bookworm-updates main
+      deb http://security.debian.org/debian-security bookworm-security main
+      deb-src http://security.debian.org/debian-security bookworm-security main
+      # Only add the backports if they already exist
+      deb http://deb.debian.org/debian bookworm-backports main
+      deb-src http://deb.debian.org/debian bookworm-backports main
+      ```
 
 5. Run updates on your Debian OS installation:
     1. Start a Terminal session
@@ -106,46 +107,46 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
 ## Terminal Application Customizations (Optional but recommended)
 ### Install ZSH and Oh-My-Zsh (Optional)
 1. Install zsh and dependencies (zsh is the base of oh-my-zsh):
-    ```
-    sudo apt install zsh curl git fonts-powerline powerline
-    ```
+   ```
+   sudo apt install zsh curl git fonts-powerline powerline
+   ```
 2. Change to desired user which you want to install oh-my-zsh eg.: `su kkiragu`
 3. Run oh my zsh install script:
-    ```
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    ```
+   ```
+   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+   ```
 4. Install theme eg powerlevel9k:
-    ```
-    git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
-    ```
+   ```
+   git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+   ```
 5. Edit .zshrc and add:
-    ```
-    sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
-    ```
+   ```
+   sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
+   ```
 6. Re-run steps 3 -> 5 for other users
 7. To make zsh (oh-my-zsh) default, log out completely and log back in for changes to take effect.
 8. To change prompt color (in .zshrc ???):
 
-    ```
-    strPowerlevel9k=$(cat <<'EOF'
+   ```
+   strPowerlevel9k=$(cat <<'EOF'
 
-    # Change prompt color
-    POWERLEVEL9K_DIR_HOME_BACKGROUND='195'
-    POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='195'
-    POWERLEVEL9K_DIR_ETC_BACKGROUND='195'
-    POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='195'
+   # Change prompt color
+   POWERLEVEL9K_DIR_HOME_BACKGROUND='195'
+   POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='195'
+   POWERLEVEL9K_DIR_ETC_BACKGROUND='195'
+   POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='195'
 
-    EOF
-    );
+   EOF
+   );
 
-    echo $strPowerlevel9k >> ~/.zshrc
-    ```
+   echo $strPowerlevel9k >> ~/.zshrc
+   ```
 
 9. If you’ll be using nvm to install and manage node/npm, add the following to the .zshrc file:
-    ```
-    export NVM_DIR=~/.nvm
-     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-    ```
+   ```
+   export NVM_DIR=~/.nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+   ```
 10. sudo apt-get install powerline
     ```
     sudo symlink /etc/systemd/user/default.target.wants/powerline-daemon.service → /usr/lib/systemd/user/powerline-daemon.service.
@@ -167,16 +168,15 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 1. Open terminal
 2. Append the sources list to include the Google Chrome repository with the following command:
 
-    ```
-    user@my-pc > cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
-    ```
+   ```
+   cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
+   ```
 3. Add a signing key as follows:
-    ```
-    user@my-pc > wget -O- https://dl.google.com/linux/linux_signing_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
-    ```
+   ```
+   wget -O- https://dl.google.com/linux/linux_signing_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
+   ```
 4. Run: `sudo apt-get update`
 5. Run: `sudo apt-get install google-chrome-stable`
-
 
 ## Server Setup
 ### Install & nginx & certbot and SSL certs
@@ -198,23 +198,23 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 1. Install PostgreSQL 15
    1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
    2. Add repo to Debian repo lists folder:
-   ```
-   echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
-   ```
+      ```
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      ```
    3. Install psql server and client: `apt -y install postgresql-15`
    4. (Recommended) Secure user postgres - TBD
    5. (Recommended) Improve postgres performance - TBD
 2. Install certbot & nginx plugin (for TLS certs):
    1. Install certbot and python certbot nginx plugin:
-   ```
-   apt install certbot python-certbot-nginx
-   ```
+      ```
+      apt install certbot python-certbot-nginx
+      ```
    2. Generate certificate as follows: `certbot --nginx certonly -d erp.mydomainname.com`
 3. Install Nginx:
    1. Install: `apt install nginx`
    2. Adjust Firewall:
       1. Allow HTTP: `ufw allow 'Nginx Full'`
-      1. Check status: `ufw status`
+      2. Check status: `ufw status`
    3. Check nginx status: `systemctl status nginx`
 
 ## Network and Printing Setup
@@ -282,18 +282,18 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
    4. Create Icon:
       1. `sudo vi /usr/share/applications/eclipse.desktop`
       2. Copy and paste ini type of info:
-        ```
-        [Desktop Entry]
-        Encoding=UTF-8
-        Name=Eclipse 4.7
-        Comment=Eclipse Neon
-        Exec=/usr/bin/eclipse
-        Icon=/usr/eclipse/icon.xpm
-        Categories=Application;Development;Java;IDE
-        Version=1.0
-        Type=Application
-        Terminal=0
-        ```
+         ```
+         [Desktop Entry]
+         Encoding=UTF-8
+         Name=Eclipse 4.7
+         Comment=Eclipse Neon
+         Exec=/usr/bin/eclipse
+         Icon=/usr/eclipse/icon.xpm
+         Categories=Application;Development;Java;IDE
+         Version=1.0
+         Type=Application
+         Terminal=0
+         ```
       3. Save and exit
 
 ## (Troubleshooting) Post Debian Installation
