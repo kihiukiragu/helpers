@@ -1,13 +1,16 @@
+> [!NOTE]
+> The content and links in this guide will periodically become outdated. Let me know when that happens! If you're willing to help, create a fix and create a pull request
+
 # Debian 12.X (Bookworm) Installation Guide
 If you’re new to Linux, welcome aboard!
 
 ## Download Debian
 
-Download ISO containing Debian latest version and bundles non-free firmware from here (scroll down to the bottom of page and download .iso file): Link: https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/
+Download an ISO containing the last version of Debian which also bundles non-free firmware from this link: https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ (scroll down to the bottom of page and download .iso file)
 
 1. Windows - download it using your prefered download manager or browser (Chrome / Firefox)
 2. Linux command line download:
-> [!NOTE]
+> [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
 wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-12.7.0-amd64-DVD-1.iso
@@ -17,7 +20,7 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
 #### Steps
 1. Preparing installation media
     1. If using Windows:-
-       1. USB - https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview
+       1. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
        2. DVD - burn the downloaded ISO to a DVD
     2. (Highly Recommended) If using Linux or MacOS use the following steps to:
        1. Burn the ISO image to DVD using Brasero or any other image writing software or
