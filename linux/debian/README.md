@@ -229,34 +229,13 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 3. Restart sshd service: `sudo service sshd restart`
 
 ### Server Applications Installation:
-1. Install PostgreSQL
-   - PostgreSQL 15 (Current Stable version for Debian) - if on Debian 12.X
-     - Simply run the following:
-     ```
-     sudo apt install postgresql postgresql-contrib
-     ```
-     - PostgreSQL 16 or 17 (if you want latest PostgreSQL features):
-       1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
-       2. Add repo to Debian repo lists folder:
-          ```
-          echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
-          ```
-       3. Install psql server and client: `apt -y install postgresql-15`
-       4. (Recommended) Secure user postgres - TBD
-       5. (Recommended) Improve postgres performance - TBD
-     - Uninstall PostgreSQL (adjust version number if different from 15):
-       > [!WARNING]
-       > This will delete all your databases running on the version you delete. Be careful with this!
-       ```
-       apt remove --purge postgresql-15
-       ```
-2. Install certbot & nginx plugin (for TLS certs):
+1. Install certbot & nginx plugin (for TLS certs):
    1. Install certbot and python certbot nginx plugin:
       ```
       apt install certbot python-certbot-nginx
       ```
    2. Generate certificate as follows: `certbot --nginx certonly -d mydomainname.com`
-3. Install Nginx:
+2. Install Nginx:
    1. Install: `apt install nginx`
    2. Adjust Firewall:
       1. Allow HTTP & HTTPS: `ufw allow 'Nginx Full'`
