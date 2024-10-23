@@ -64,11 +64,18 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
       - Start: `vi /path/to/file/to/be/edited`
    2. gedit - ideal for beginners
 4. Edit sources file located at: `/etc/apt/sources.list`
-   1. Switch to root mode (see #2 above)
-   2. Type command: `gedit /etc/apt/sources.list` or `vi /etc/apt/sources.list`
-   3. Comment out DVD source as update application will keep asking for DVD to be inserted. Comment out a line by adding `#` at the beginning of the DVD source line. You can also just delete the line
-   4. You can insert additional sources for updates here
-   5. It should look like:
+   1. Switch to root user (see #2 above)
+   2. Backup sources.list:
+      ```
+      if [ ! -d "~/backup" ]; then
+          mkdir ~/backup
+      fi
+      cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
+      ```
+   3. Type command: `gedit /etc/apt/sources.list` or `vi /etc/apt/sources.list`
+   4. Comment out DVD source as update application will keep asking for DVD to be inserted. Comment out a line by adding `#` at the beginning of the DVD source line. You can also just delete the line
+   5. You can insert additional sources for updates here
+   6. It should look like:
       ```
       deb http://deb.debian.org/debian/ bookworm main
       deb-src http://deb.debian.org/debian/ bookworm main
@@ -187,15 +194,39 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 2. Install certbot python plugin: `sudo apt install python3-certbot-nginx`
 3. Generate SSL certs: `certbot --nginx certonly -d domain.example.com`
 
-### Allow User to sudo without password
+### (Optional) Allow a User to sudo without password
+> [!WARNING]
+> This option should ONLY be used if you fully understand the implications.
 1. Create a file in `/etc/sudoers.d`
 2. Edit the file and put the following rule: `username ALL=(ALL) NOPASSWD: ALL`
 
-### Securing SSH Port and Configuration
-1. Change default ssh port:
-2. Edit configuration file: `vi /etc/ssh/sshd_config`
-3. Disable Root login: `PermitRootLogin no`
-4. Restart sshd: `service sshd restart`
+### (Optional) Securing SSH service
+> [!WARNING]
+> Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
+1. Secure access to your server by changing sshd configurations:
+   - Edit configuration file: `vi /etc/ssh/sshd_config`
+     - Disable Root login: `PermitRootLogin no`
+     - Disable Password Authentication: `PasswordAuthentication no`
+   - OR run the following as user `root`:
+   ```
+   if [ ! -d "~/backup" ]; then
+    mkdir ~/backup
+   fi
+   timestamp=d$(date +"%Y%m%d").t$(date +"%H%M%S")
+   cp /etc/ssh/sshd_config ~/backup/sshd_config.$timestamp.bak
+   sed -i 's/\(#P\|P\)ermitRootLogin.*$/PermitRootLogin no/g' /etc/ssh/sshd_config
+   sed -i 's/#PasswordAuthentication.*$/PasswordAuthentication no/g' /etc/ssh/sshd_config
+   ```
+2. Verify using:
+   ```
+   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config
+   ```
+   Output should be:
+   ```
+   PermitRootLogin no
+   PasswordAuthentication no
+   ```
+3. Restart sshd service: `service sshd restart`
 
 ### Server Applications Installation:
 1. Install PostgreSQL 15
