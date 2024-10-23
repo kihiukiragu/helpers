@@ -235,7 +235,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
      ```
      sudo apt install postgresql postgresql-contrib
      ```
-     - PostgreSQL 16 or 17:
+     - PostgreSQL 16 or 17 (if you want latest PostgreSQL features):
        1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
        2. Add repo to Debian repo lists folder:
           ```
@@ -245,6 +245,8 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
        4. (Recommended) Secure user postgres - TBD
        5. (Recommended) Improve postgres performance - TBD
      - Uninstall PostgreSQL (adjust version number if different from 15):
+       > [!WARNING]
+       > This will delete all your databases running on the version you delete. Be careful with this!
        ```
        apt remove --purge postgresql-15
        ```
