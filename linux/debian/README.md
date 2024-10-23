@@ -179,7 +179,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 2. Append the sources list to include the Google Chrome repository with the following command:
 
    ```
-   cat << EOF > /etc/apt/sources.list.d/google-chrome.list deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main EOF
+   printf 'deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
    ```
 3. Add a signing key as follows:
    ```
@@ -204,7 +204,7 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 > [!WARNING]
 > Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
 1. Secure access to your server by changing sshd configurations:
-   - Edit configuration file: `vi /etc/ssh/sshd_config`
+   - Edit configuration file: `sudo vi /etc/ssh/sshd_config`
      - Disable Root login: `PermitRootLogin no`
      - Disable Password Authentication: `PasswordAuthentication no`
    - OR run the following as user `root`:
@@ -226,14 +226,14 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
    PermitRootLogin no
    PasswordAuthentication no
    ```
-3. Restart sshd service: `service sshd restart`
+3. Restart sshd service: `sudo service sshd restart`
 
 ### Server Applications Installation:
 1. Install PostgreSQL 15
    1. Add Repo: `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
    2. Add repo to Debian repo lists folder:
       ```
-      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
       ```
    3. Install psql server and client: `apt -y install postgresql-15`
    4. (Recommended) Secure user postgres - TBD
@@ -243,11 +243,12 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
       ```
       apt install certbot python-certbot-nginx
       ```
-   2. Generate certificate as follows: `certbot --nginx certonly -d erp.mydomainname.com`
+   2. Generate certificate as follows: `certbot --nginx certonly -d mydomainname.com`
 3. Install Nginx:
    1. Install: `apt install nginx`
    2. Adjust Firewall:
-      1. Allow HTTP: `ufw allow 'Nginx Full'`
+      1. Allow HTTP & HTTPS: `ufw allow 'Nginx Full'`
+      2. Allow SSH: `ufw allow ssh`
       2. Check status: `ufw status`
    3. Check nginx status: `systemctl status nginx`
 
@@ -271,9 +272,18 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 ### Install Dev Tools:
 1. Install git: sudo apt-get install git
 2. Configure:
+   - Set your email and name:
    ```
    git config --global user.email “<YourEmail@email.com>”
    git config --global user.name “Firstname Lastname”
+   ```
+   - Set the editor of your choice:
+   ```
+   sudo update-alternatives --config editor
+   ```
+   OR
+   ```
+   git config --global core.editor "vim" #if not using Debian based distro
    ```
 3. Install Java JDK:
     ```
