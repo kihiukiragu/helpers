@@ -1,20 +1,37 @@
 # PostgreSQL
 
 ## Install PostgreSQL
-- PostgreSQL 15 (Current Stable version for Debian) - if on Debian 12.X, simply run the following:
+> [!NOTE]
+> The versions might be outdated if this document is not up to date.
+
+There are 2 ways to install PostgreSQL. Either you install the version that ships with Debian (easiest and recommended for stability) OR you install the current release from PostgreSQL( newer but not as stable):
+- Stable: PostgreSQL 15 (Current Stable version for Debian repositories) - if on Debian 12.X, simply run the following:
  ```
  sudo apt install postgresql postgresql-contrib
  ```
 - PostgreSQL 16 or 17 (if you want latest PostgreSQL features):
-   1. Add Repo: 
+   1. Add PostgreSQL repo key:
       ```
       wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
       ```
-   2. Add repo to Debian repo lists folder:
+   2. Add PostgreSQL repo to your Debian installation repo lists folder:
       ```
       echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
       ```
-   3. Install psql server and client: `apt -y install postgresql-15`
+   3. Install psql server and client: `apt -y install postgresql-17`
+   4. Change user to the `postgres` user and start creating databases, tables and running SQL queries:
+      - Change user:
+      ```
+      sudo su - postgres
+      ```
+      OR
+      ```
+      sudo -u postgres zsh #if using oh-my-zsh
+      ```
+      - Access the postgres terminal based front end `psql`:
+      `psql`
+      - Create roles/user, databases and queries in here.
+      - To exit or quit from `psql` type: `\q`
    4. (Recommended) Secure user postgres - TBD
    5. (Recommended) Improve postgres performance - TBD
 
@@ -34,7 +51,7 @@ If you have version 15 and 17 installed on the same server, it is possible to up
   ```
   sudo pg_dropcluster 17 main --stop
   ```
-- Upgrade databases on cluster 15:
+- Upgrade databases on cluster 15 (this will upgrade 15 to any newer version eg 17):
   ```
   sudo pg_upgradecluster 15 main
   ```
