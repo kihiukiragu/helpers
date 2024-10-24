@@ -2,7 +2,7 @@
 
 ## Install PostgreSQL
 > [!NOTE]
-> The versions might be outdated if this document is not up to date.
+> Versions mentioned in this document might not be current if this document has not been updated in a while
 
 There are 2 ways to install PostgreSQL. Either you install the version that ships with Debian (easiest and recommended for stability) OR you install the current release from PostgreSQL( newer but not as stable):
 - Stable: PostgreSQL 15 (Current Stable version for Debian repositories) - if on Debian 12.X, simply run the following:
@@ -55,17 +55,17 @@ If you have version 15 and 17 installed on the same server, it is possible to up
   ```
   sudo pg_upgradecluster 15 main
   ```
-- If upgrade is successful with no errors, confirm databases exist
+- If upgrade is successful with no errors, confirm that your databases still exist
 - Drop the 15 cluster:
   ```
-  pg_dropcluster 15 main
+  sudo pg_dropcluster 15 main
   ```
 
 ## Uninstall PostgreSQL:
 > [!WARNING]
 > If not done right, this will delete all your databases running on the version you delete. Be careful with this!
 
-After installing a newer version e.g. you install postgresql-16 **AND** successfully upgrading to a new cluster, you might want to remove and purge older version postgresql-15:
+After installing a newer version e.g. you install postgresql-17 **AND** successfully upgrading to a new cluster, you might want to remove and purge older version postgresql-15:
 ```
 apt remove --purge postgresql-15
 ```
