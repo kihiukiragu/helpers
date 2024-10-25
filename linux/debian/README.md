@@ -371,5 +371,5 @@ For `php`, if the above doesn't work, you might need to: delete and add the key 
 > [!TIP]
 > The following might be helpful to get your Linux PC or Server appropriately configured:
 
-1. [PostgreSQL - Installing, Configuring & Uninstalling](database/README.md)
-2. [Configuring Linux Desktop & Installing LibreOffice, IDEs etc](desktop/README.md)
+1. [PostgreSQL - Installing, Configuring & Uninstalling](../database/README.md)
+2. [Configuring Linux Desktop & Installing LibreOffice, IDEs etc](../desktop/README.md)
