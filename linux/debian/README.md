@@ -236,10 +236,10 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
       ```
    2. Generate certificate as follows: `certbot --nginx certonly -d mydomainname.com`
 2. Install Nginx:
-   1. Install: `apt install nginx`
+   1. Install: `sudo apt install nginx`
    2. Adjust Firewall:
-      1. Allow HTTP & HTTPS: `ufw allow 'Nginx Full'`
-      2. Allow SSH: `ufw allow ssh`
+      1. Allow HTTP & HTTPS: `sudo ufw allow 'Nginx Full'`
+      2. Allow SSH: `sudo ufw allow ssh`
       2. Check status: `ufw status`
    3. Check nginx status: `systemctl status nginx`
 
