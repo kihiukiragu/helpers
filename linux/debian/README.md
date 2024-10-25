@@ -37,45 +37,57 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
 
 2. Ensure you can boot to USB/DVD on the computer where Debian is to be installed
 3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts
-4. Remember to note down the root credentials (username & password) during installations. You will be prompted to create a new user.
+4. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
 5. Once installation is complete, proceed to configure your OS for updates etc
 
 ### Configuration of OS for Updates and Package Installations
-1. (Optional if user created was created with root privileges) - Login as root to:
-   1. Start a terminal session
-   2. Add the new user you created during install as follows:
-      ```
-      sudo su - root
-      adduser theusernameyoucreated sudo
-      ```
-      OR
-      ```
-      # Add an existing user to list of sudoers
-      usermod -aG sudo nameOfNewUser
-      ```
+> [!NOTE]
+> During Debian installation, you created a primary user/username. Those credentials will come in handy in the next steps.
+> If you're new to Linux and command line, you likely will want to substituate any instances of the editor usage of `vi` with beginner editors eg `gedit` or `kwrite` or `nano`.
+> Command line newbies - when prompted to enter a password, nothing will appear on the screen. Don't panic!
 
-  3. Logout as root and login as the above user.
-2. Check if root privileges worked: Start a Terminal session:
+Your Debian installation needs to be configured to pull and apply updates in future:
+1. Start a terminal session
+2. (Optional) Add new user(s):
+  ```
+  sudo su - root
+  adduser newusername sudo
+  ```
+  OR
+  ```
+  # Add an existing user to list of sudoers
+  usermod -aG sudo newusername
+  ```
+
+3. Test if you actually have root privileges:
    1. Enter command (you will be prompted to enter your password): `sudo su - root`
    2. If no error messages occur, then that means you’re now root!
-3. Editing application options:
-   1. vi/vim - shell application that's ideal for experienced Linux users
+   3. Install gedit, and kwrite:
+      ```
+      sudo apt install gedit kwrite
+      ```
+4. Editing application options:
+   - gedit - ideal for beginners OR
+   - vi/vim - shell application that's ideal for experienced Linux users
       - Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
       - Start: `vi /path/to/file/to/be/edited`
-   2. gedit - ideal for beginners
-4. Edit sources file located at: `/etc/apt/sources.list`
-   1. Switch to root user (see #2 above)
-   2. Backup sources.list:
+5. Edit sources file located at: `/etc/apt/sources.list`
+   1. Backup sources.list in case something goes awry:
       ```
       if [ ! -d "~/backup" ]; then
           mkdir ~/backup
       fi
       cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
       ```
-   3. Type command: `gedit /etc/apt/sources.list` or `vi /etc/apt/sources.list`
-   4. Comment out DVD source as update application will keep asking for DVD to be inserted. Comment out a line by adding `#` at the beginning of the DVD source line. You can also just delete the line
-   5. You can insert additional sources for updates here
-   6. It should look like:
+   2. Open an editor to make the changes:
+      ```
+      sudo gedit /etc/apt/sources.list
+      ```
+      OR for vi folks:
+      ```
+      sudo vi /etc/apt/sources.list
+      ```
+   3. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
       ```
       deb http://deb.debian.org/debian/ bookworm main
       deb-src http://deb.debian.org/debian/ bookworm main
@@ -83,15 +95,21 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
       deb-src http://deb.debian.org/debian/ bookworm-updates main
       deb http://security.debian.org/debian-security bookworm-security main
       deb-src http://security.debian.org/debian-security bookworm-security main
+
       # Only add the backports if they already exist
       deb http://deb.debian.org/debian bookworm-backports main
       deb-src http://deb.debian.org/debian bookworm-backports main
       ```
 
-5. Run updates on your Debian OS installation:
-    1. Start a Terminal session
-    2. Fetch latest version of the package list from Debian repo and 3rd party repos: `sudo apt update`
-    3. Download and install for any outdated packages: `sudo apt dist-upgrade`
+6. Update your Debian OS installation:
+   - Fetch latest version of the package list from Debian repo and 3rd party repos:
+     ```
+     sudo apt update
+     ```
+   - Download and install for any outdated packages:
+     ```
+     sudo apt full-upgrade
+     ```
 
 ### Older Debian Versions eg Stretch and Buster
 
@@ -169,13 +187,14 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
     ```
 
 ### (Optional) Change default Editor to vim
+
 1. Type: `sudo update-alternatives --config editor`
 2. Select `vim.basic`
 
 ## Install Google Chrome
-Debian comes with Firefox installed but you can add Chrome if you like: <https://www.linuxcapable.com/how-to-install-google-chrome-on-debian-linux/>
+Debian comes with Firefox installed but you can add Chrome if you like.
 
-1. Open terminal
+1. Open a terminal session
 2. Append the sources list to include the Google Chrome repository with the following command:
 
    ```
@@ -183,65 +202,16 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
    ```
 3. Add a signing key as follows:
    ```
-   wget -O- https://dl.google.com/linux/linux_signing_key.pub |gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
+   wget -O- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google.gpg
    ```
-4. Run: `sudo apt-get update`
-5. Run: `sudo apt-get install google-chrome-stable`
-
-## Server Setup
-### Install & nginx & certbot and SSL certs
-1. Install nginx: `sudo apt install nginx`
-2. Install certbot python plugin: `sudo apt install python3-certbot-nginx`
-3. Generate SSL certs: `certbot --nginx certonly -d domain.example.com`
-
-### (Optional) Allow a User to sudo without password
-> [!WARNING]
-> This option should ONLY be used if you fully understand the implications.
-1. Create a file in `/etc/sudoers.d`
-2. Edit the file and put the following rule: `username ALL=(ALL) NOPASSWD: ALL`
-
-### (Optional) Securing SSH service
-> [!WARNING]
-> Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
-1. Secure access to your server by changing sshd configurations:
-   - Edit configuration file: `sudo vi /etc/ssh/sshd_config`
-     - Disable Root login: `PermitRootLogin no`
-     - Disable Password Authentication: `PasswordAuthentication no`
-   - OR run the following as user `root`:
+4. Update the repositories:
    ```
-   if [ ! -d "~/backup" ]; then
-    mkdir ~/backup
-   fi
-   timestamp=d$(date +"%Y%m%d").t$(date +"%H%M%S")
-   cp /etc/ssh/sshd_config ~/backup/sshd_config.$timestamp.bak
-   sed -i 's/\(#P\|P\)ermitRootLogin.*$/PermitRootLogin no/g' /etc/ssh/sshd_config
-   sed -i 's/#PasswordAuthentication.*$/PasswordAuthentication no/g' /etc/ssh/sshd_config
+   sudo apt-get update
    ```
-2. Verify using:
+5. Install Chrome (recommend the stable option):
    ```
-   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config
+   sudo apt-get install google-chrome-stable
    ```
-   Output should be:
-   ```
-   PermitRootLogin no
-   PasswordAuthentication no
-   ```
-3. Restart sshd service: `sudo service sshd restart`
-
-### Server Applications Installation:
-1. Install certbot & nginx plugin (for TLS certs):
-   1. Install certbot and python certbot nginx plugin:
-      ```
-      apt install certbot python-certbot-nginx
-      ```
-   2. Generate certificate as follows: `certbot --nginx certonly -d mydomainname.com`
-2. Install Nginx:
-   1. Install: `sudo apt install nginx`
-   2. Adjust Firewall:
-      1. Allow HTTP & HTTPS: `sudo ufw allow 'Nginx Full'`
-      2. Allow SSH: `sudo ufw allow ssh`
-      2. Check status: `ufw status`
-   3. Check nginx status: `systemctl status nginx`
 
 ## Network and Printing Setup
 ### Configure Internet Sharing (Share WiFi via Ethernet Port)
@@ -250,86 +220,16 @@ Debian comes with Firefox installed but you can add Chrome if you like: <https:/
 3. Restart network manager service if need be.
 
 ### Configure VPN eg by Keep Solids (VPN Unlimited)
+TBD
 
 ### Install & Configure Printing, LibreOffice:
 1. Setting up printing: <https://wiki.debian.org/SystemPrinting>
 2. Install LibreOffice (if it’s not installed already):
-   1. sudo apt update
-   1. sudo apt install libreoffice
+   ```
+   sudo apt update
+   sudo apt install libreoffice
+   ```
 3. AnyDesk (Use the following link, then convert the keyring as shown later in this guide)- http://deb.anydesk.com/howto.html
-
-
-## Software Development Setup
-### Install Dev Tools:
-1. Install git: sudo apt-get install git
-2. Configure:
-   - Set your email and name:
-   ```
-   git config --global user.email “<YourEmail@email.com>”
-   git config --global user.name “Firstname Lastname”
-   ```
-   - Set the editor of your choice:
-   ```
-   sudo update-alternatives --config editor
-   ```
-   OR
-   ```
-   git config --global core.editor "vim" #if not using Debian based distro
-   ```
-3. Install Java JDK:
-    ```
-    sudo apt-get install default-jre
-    sudo apt-get install default-jdk
-    ```
-4. Gradle: sudo apt-get install gradle
-5. Install node:
-   1. Install nvm:
-    ```
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | bash
-    ```
-   2. If using zsh, edit .zshrc and add:
-    ```
-    export NVM_DIR=~/.nvm
-      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-    ```
-   3. `source ./zshrc`
-   4. `nvm install node`
-6. Install Visual Code
-   1. Prepare sources:
-    ```
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-    sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft-archive-keyring.gpg
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-    ```
-   2. Install:
-    ```
-    sudo apt-get install apt-transport-https
-    sudo apt-get update
-    sudo apt-get install code
-    ```
-7. Install IntelliJ
-   1. Install snaps (use this to manage IntelliJ installs) - sudo apt install snapd
-   2. Install IntelliJ - sudo snap install intellij-idea-community --classic
-8. Install Eclipse 2020-06:
-   1. Download: curl -O http://ftp.jaist.ac.jp/pub/eclipse/technology/epp/downloads/release/neon/2/eclipse-java-neon-2-linux-gtk-x86_64.tar.gz
-   2. Extract to /usr/ (So users can use it): sudo tar -zxvf eclipse-java-neon*.tar.gz -C /usr/
-   3. Symlink to bin: sudo ln -s /usr/eclipse/eclipse /usr/bin/eclipse
-   4. Create Icon:
-      1. `sudo vi /usr/share/applications/eclipse.desktop`
-      2. Copy and paste ini type of info:
-         ```
-         [Desktop Entry]
-         Encoding=UTF-8
-         Name=Eclipse 4.7
-         Comment=Eclipse Neon
-         Exec=/usr/bin/eclipse
-         Icon=/usr/eclipse/icon.xpm
-         Categories=Application;Development;Java;IDE
-         Version=1.0
-         Type=Application
-         Terminal=0
-         ```
-      3. Save and exit
 
 ## (Troubleshooting) Post Debian Installation
 ###  Blank Screen
