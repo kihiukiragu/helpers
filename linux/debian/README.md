@@ -147,13 +147,13 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
    ```
    git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
    ```
-5. Edit .zshrc and add:
+5. Run the following (NB: This updattes `.zshrc` file):
    ```
    sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
    ```
 6. Re-run steps 3 -> 5 for other users
 7. To make zsh (oh-my-zsh) default, log out completely and log back in for changes to take effect.
-8. To change prompt color (in .zshrc ???):
+8. Run the following to change prompt color (NB: This updattes `.zshrc` file):
 
    ```
    strPowerlevel9k=$(cat <<'EOF'
