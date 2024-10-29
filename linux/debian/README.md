@@ -25,8 +25,24 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
     2. (Highly Recommended) If using Linux or MacOS use the following steps to:
        1. Burn the ISO image to DVD using Brasero or any other image writing software or
        2. USB
-          1. From the terminal, check USB drive:
-             ```user@my-pc > lsblk #or dmesg```
+          1. From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
+             ```
+             ...
+             loop21        7:21   0   347M  1 loop /snap/wine-platform-runtime/390
+             sda           8:0    0 931.5G  0 disk
+             ├─sda1        8:1    0   128M  0 part
+             └─sda2        8:2    0 931.4G  0 part
+             sdb           8:16   1  28.9G  0 disk
+             └─sdb1        8:17   1  28.9G  0 part /media/kkiragu/docs
+             sdc           8:32   1  28.9G  0 disk
+             └─sdc1        8:33   1  28.9G  0 part
+             sr0          11:0    1  1024M  0 rom
+             nvme0n1     259:0    0 476.9G  0 disk
+             ├─nvme0n1p1 259:1    0 445.2G  0 part /
+             ├─nvme0n1p2 259:2    0     1K  0 part
+             ...
+             ```
+             Where in the above case, the USB drive is `sdb1`
 
           2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
              ```
@@ -223,7 +239,7 @@ Debian comes with Firefox installed but you can add Chrome if you like.
 TBD
 
 ### Install & Configure Printing, LibreOffice:
-1. Setting up printing: <https://wiki.debian.org/SystemPrinting>
+1. Setting up printing: https://wiki.debian.org/SystemPrinting
 2. Install LibreOffice (if it’s not installed already):
    ```
    sudo apt update
