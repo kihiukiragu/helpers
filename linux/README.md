@@ -1,6 +1,9 @@
+> [!NOTE]
+> The contents of this repo are constantly changing and we welcome new tips and information to supplement what is already here.
+
 ## Linux Installation, Configuration & Maintainance
 > [!TIP]
-> The following might be helpful to get your Linux PC or Server appropriately configured:
+> The following will be helpful to get your Linux PC or Server appropriately configured. However, do NOT limit yourself to this repo only.
 
 1. [All about Debian - Installing, Configuring & Customizations](debian/README.md)
 2. [PostgreSQL - Installing, Configuring & Uninstalling](database/README.md)
