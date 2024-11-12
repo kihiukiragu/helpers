@@ -44,17 +44,18 @@ wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-1
              ```
              Where in the above case, the USB drive is `sdb1`
 
-          2. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
+          2. You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
+          3. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
              ```
              #NB: Verify sdX is the usb drive you wish to create a bootable from eg cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
              cp debian-file.iso /dev/sdX
              sync #ensures files are securely copied
              ```
 
-2. Ensure you can boot to USB/DVD on the computer where Debian is to be installed
-3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts
+2. In your BIOS settings, ensure you can boot to USB/DVD on the computer where Debian is to be installed.
+3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts.
 4. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
-5. Once installation is complete, proceed to configure your OS for updates etc
+5. Once installation is complete, proceed to configure your OS for updates etc.
 
 ### Configuration of OS for Updates and Package Installations
 > [!NOTE]
@@ -154,6 +155,12 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
    ```
    sudo apt install zsh curl git fonts-powerline powerline
    ```
+
+   OR for Fedora
+   ```
+   sudo dnf install zsh curl git powerline
+   ```
+
 2. Change to desired user which you want to install oh-my-zsh eg.: `su kkiragu`
 3. Run oh my zsh install script:
    ```
