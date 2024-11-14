@@ -17,13 +17,13 @@ To ensure your USB is recognized by a UEFI Boot mode, you can utilize Ventoy to 
   - Go to options and switch partition type from `MBR` to `GPT`.
   - Click on `Install`.
   
-- Format the free space to ext4 so that it is visible in Linux:
+- (This might NOT be necessary if you chose the `GPT` option above) Format the free space to ext4 so that it is visible in Linux:
   ```
   sudo mkfs -t ext4 /dev/sdb1
   ```
-- Copy the ISO files to the ext4 partion part of the USB
+- Copy as many ISO files to the ext4 partion part of the USB eg you can have CentOS, Debian, Fedora, Ubuntu ISO's on one Ventoy USB drive:
   ```
-  sudo cp /path/to/iso/file 
+  sudo cp /path/to/iso/file(s)
   sudo sync
   ```
 - Proceed to boot from USB and install Windows

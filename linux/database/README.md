@@ -70,13 +70,14 @@ After installing a newer version e.g. you install postgresql-17 **AND** successf
 apt remove --purge postgresql-15
 ```
 
-## Access Remote Database using pgAdmin & SSH Tunneling
-The safer way to access a remote database is to use ssh tunneling. This ensures:
-- Password brute force cannot be carried out
-- Database port (typically port #5432) on remote server is kept locked and safe
+## Access Remote Database using pgAdmin4 & SSH Tunneling
+The safer way to access a remote database is to use [SSH Tunneling](https://en.wikipedia.org/wiki/Tunneling_protocol#Secure_Shell_tunneling). This ensures:
+- Password brute force attacks cannot be carried out as there's no direct way to connect to the database.
+- Database port (typically port #5432) can thus be locked down to internal server use only.
 
 Steps:
-- Install pgAdmin
+- Ensure postgres is installed on the ssh tunnel host (ie the PC you're currently using)
+- Install pgAdmin4
   ```
   curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
   sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
@@ -84,10 +85,10 @@ Steps:
   ```
 - Start pgAdmin4 (If using a menu based Desktop Environment eg xfce or Cinnamon, it will likely be in the Applications menu under 'Development')
 - Create a new Server
-  - General tab: Give the connect a name of your choice eg `customer-db-ssh-tunnel`
+  - General tab: Give the connection a name of your choice eg `customer-db-ssh-tunnel`
   - Connection tab:
     - Host name/address (host is the PC you are using): `localhost`
-    - Port (default port on your local PC): 5432
+    - Port (default port on your local PC): `5432`
     - Maintanance database (enter the database that you have been granted access to remotely): `customer`
     - Username (your username on the local PC): `pomollo`
   - SSH Tunnel tab:

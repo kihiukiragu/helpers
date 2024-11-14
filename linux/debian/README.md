@@ -2,7 +2,10 @@
 > The content and links in this guide will periodically become outdated. Let me know when that happens! If you're willing to help, create a fix and create a pull request
 
 # Debian 12.X (Bookworm) Installation Guide
-If you’re new to Linux, welcome aboard!
+Why Debian GNU/Linux? Debian might be right for you if you:
+- Like stability in an Operating System.
+- Do NOT care for the very latest tools and applications until they are thoroughly tested.
+- Have older hardware and want something lean and mean.
 
 ## Download Debian
 
