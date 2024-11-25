@@ -12,7 +12,7 @@ There are 2 ways to install PostgreSQL. Either you install the version that ship
 - PostgreSQL 16 or 17 (if you want latest PostgreSQL features):
    1. Add PostgreSQL repo key:
       ```
-      wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
       ```
    2. Add PostgreSQL repo to your Debian installation repo lists folder:
       ```
@@ -58,7 +58,7 @@ If you have version 15 and 17 installed on the same server, it is possible to up
 - If upgrade is successful with no errors, confirm that your databases still exist
 - Drop the 15 cluster:
   ```
-  sudo pg_dropcluster 15 main
+  sudo pg_dropcluster 15 main --stop
   ```
 
 ## Uninstall PostgreSQL:
@@ -67,10 +67,23 @@ If you have version 15 and 17 installed on the same server, it is possible to up
 
 After installing a newer version e.g. you install postgresql-17 **AND** successfully upgrading to a new cluster, you might want to remove and purge older version postgresql-15:
 ```
-apt remove --purge postgresql-15
+apt remove --purge postgresql-15 postgresql-client-15
 ```
 
-## Access Remote Database using pgAdmin4 & SSH Tunneling
+## Access a Remove Database via SSH Tunneling
+### Using Terminal
+
+Create an ssh tunnel:
+```
+ssh -f -o ExitOnForwardFailure=yes -L 63333:localhost:5432 username@remote.postgresql.server.com sleep 10
+```
+
+Access the database:
+```
+psql -d database_name -h localhost -p 63333
+```
+
+### Using pgAdmin4
 The safer way to access a remote database is to use [SSH Tunneling](https://en.wikipedia.org/wiki/Tunneling_protocol#Secure_Shell_tunneling). This ensures:
 - Password brute force attacks cannot be carried out as there's no direct way to connect to the database.
 - Database port (typically port #5432) can thus be locked down to internal server use only.
