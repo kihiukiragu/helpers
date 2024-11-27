@@ -36,12 +36,7 @@ Repositories loaded.
 Package "fedora-workstation-repositories-38-6.fc41.x86_64" is already installed.
 ```
 
-Enable Google Chrome repo:
-```
-sudo dnf config-manager setopt google-chrome.enabled=1
-```
-
-Install
+Install:
 ```
 sudo dnf install google-chrome-stable
 ```
@@ -102,6 +97,8 @@ Enable and start the sshd daemon (this a one-time thing):
 sudo systemctl enable sshd
 sudo systemctl start sshd
 ```
+
+NB: Fedora 41 and newer only allow remote ssh using ssh key authentication by default.
 
 ### Desktop Environments
 To install Cinnamon, KDE Plasma and XFCE:

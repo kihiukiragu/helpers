@@ -4,7 +4,7 @@ You might want to have Linux and Windows on the same PC. Follow this guide to ma
 
 ## UEFI Bootable USB using Ventoy
 > [!NOTE]
-> This section is NOT necessary if the installation targeted PC has an option for Legacy BIOS boot mode.
+> This section is NOT necessary if the installation targeted PC has an option for Legacy BIOS boot mode. However, most modern PCs have UEFI and this can make your life easier in terms of making a USB that contains several ISOs and you can just overwrite the files when you get a newer one. With UEFI you don't have to worry about tinkering with making BIOS changes other than boot sequence.
 
 Some PC manufactures have started to abandon support for Legacy BIOS boot support in favor of the new UEFI boot mode support ONLY.
 To ensure your USB is recognized by a UEFI Boot mode, you can utilize Ventoy to make your USB UEFI bootable:
@@ -17,9 +17,13 @@ To ensure your USB is recognized by a UEFI Boot mode, you can utilize Ventoy to 
   - Go to options and switch partition type from `MBR` to `GPT`.
   - Click on `Install`.
   
-- (This might NOT be necessary if you chose the `GPT` option above) Format the free space to ext4 so that it is visible in Linux:
+- The above process will create 2 partitions:
+  1. VTOYEFI - contains the Ventoy Software. Leave this as is.
+  2. A free `dos` partion - you can figure out what drive it is by executing `lsblk`
+
+- Format the free `dos` partion space to ext4 so that it is visible in Linux eg:
   ```
-  sudo mkfs -t ext4 /dev/sdb1
+  sudo mkfs -t ext4 /dev/sdbX # where X will be a number eg sdb1 or sdb2 etc
   ```
 - Copy as many ISO files to the ext4 partion part of the USB eg you can have CentOS, Debian, Fedora, Ubuntu ISO's on one Ventoy USB drive:
   ```
@@ -28,6 +32,7 @@ To ensure your USB is recognized by a UEFI Boot mode, you can utilize Ventoy to 
   ```
 - Proceed to boot from USB and install Windows
 
+### Windows & Partitioning & Shrinking and Reclaiming Space
 ## Install Windows First
 Windows OS requires primary partition on a PC to be formatted to NTFS format. For this reason, Windows has to go first!
 
@@ -45,6 +50,13 @@ Steps:
 - Click `Next` to start Windows installation
 - Once finished, you can either boot into Windows to ensure it installed ok.
 - Restart the PC and then installe the Linux Distro of your choice.
+
+## Windows Already Installed and occupies all available space
+If Windows was installed and all the partion space taken, you can:
+- Shrink the Windows partion and
+- Reclaim the space you want to have for Fedora or Debian etc installation.
+
+This process will be available during the Linux installation. Play close attention so as to indicate that you are reclaiming and not overriding the Windows partion and therefore getting rid of Windows!
 
 ## Install Linux after Windows
 Boot with a Linux Distro bootable source and proceed to follow the Debian or Fedora installation guides.

@@ -16,7 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-wget -c https://cdimage.debian.org/cdimage/release/12.7.0/amd64/iso-dvd/debian-12.7.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.8.0-amd64-DVD-1.iso
 ```
 
 ### Installation
