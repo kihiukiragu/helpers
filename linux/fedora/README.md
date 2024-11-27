@@ -98,8 +98,6 @@ sudo systemctl enable sshd
 sudo systemctl start sshd
 ```
 
-NB: Fedora 41 and newer only allow remote ssh using ssh key authentication by default.
-
 ### Desktop Environments
 To install Cinnamon, KDE Plasma and XFCE:
 ```
