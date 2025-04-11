@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> It's always a good idea to back up your most important files, photos, videos before running an Operating System. A small misstep could wipe out the wrong hard-drive or partition.
+
 # Dual Boot Linux and Windows
 
 You might want to have Linux and Windows on the same PC. Follow this guide to make this happen.
@@ -8,25 +11,26 @@ You might want to have Linux and Windows on the same PC. Follow this guide to ma
 - Insert it in the USB drive.
 - Access `My Computer` and make note of the driver letter representing the USB Flash drive eg `L:` (this will vary from PC to PC).
 - Downloading Ventoy:
-  - Download the Ventoy Software ventoyu.net
-  - Download the zip file - ensure the windows zip file
+  - Navigate to the Ventoy Software Download page https://www.ventoy.net/en/download.html
+  - Download the **Windows** zip file.
   - Unzip/Extract the zip file. You'll get a folder e.g. `Ventoy-1.1.05`.
 - Running Ventoy - Inside the folder, doubleclick on the `Ventoy2Disk.exe` file. This will start the Ventoy program.
   - Ventoy will try to guess the USB drive. Correct it by picking the right drive as earlier identified if it's not the right one.
   - Click on install and accept to formatting "The device will be formatted and all the data will be lost. Continue?".
-  - Close all open Windows after that process is complete.
+  - Close all open Windows after installation process is complete.
 - Downloading Debian/Linux:
   - Use the [Debian 12.X (Bookworm) Installation Guide #Download](debian/README.md#download-debian) just to download the ISO file.
-  - Go to `My Computer` and copy and paste the ISO file to the USB flash
-  - Return to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+  - Go to `My Computer` and copy and paste the downloaded ISO file to the USB flash.
+- IMPORTANT: See Windows & Partitioning section below to reserve/dedicate space on your PC hard-drive for Linux installation.
+- Once you have space reserved, resume to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ### Windows & Partitioning & Shrinking and Reclaiming Space
-#### Windows Already Installed and occupies all available space
+#### Windows Already Installed and Occupies All Available space
 If Windows was installed and all the partition space taken, you can:
 - Shrink the Windows partition by:
   - Start menu, run `Disk Management` or `partition manage` (Run as administrator).
-  - Right click on `C:` drive and select `Shrink Volume`.
-  - In the 3rd field ("Enter the amount of space to shrink"), enter an amount larger than 25000 (ie ~25 GB).
+  - Right click on `C:` drive (or any other hard-drive if one exists) and select `Shrink Volume`.
+  - In the 3rd field ("Enter the amount of space to shrink"), enter an amount larger than 30000 (ie ~30 GB) but not larger than 50,000 unless you have the space that is.
   - Click on `Shrink`. This will create space that will be used during Debian / Fedora Linux installation.
 - CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not accidentally install over the existing Windows installation.
 - Return to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
@@ -49,7 +53,8 @@ Steps:
 - Once finished, you can either boot into Windows to ensure it installed ok.
 - Restart the PC and then install the Linux Distro of your choice.
 
-This process will be available during the Linux installation. Pay close attention to indicate that you are reclaiming and not overriding the Windows partition and therefore getting rid of Windows!
+- CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not overriding the Windows partition and therefore getting rid of Windows!
+- Return to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ## Linux Users - UEFI Bootable USB using Ventoy
 > [!NOTE]

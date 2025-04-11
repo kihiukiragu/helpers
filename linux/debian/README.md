@@ -4,7 +4,7 @@
 # Debian 12.X (Bookworm) Installation Guide
 Why Debian GNU/Linux? Debian might be right for you if you:
 - Like stability in an Operating System.
-- Do NOT care for the very latest tools and applications until they are thoroughly tested.
+- Do NOT care for the very latest Linux tools and applications until they are thoroughly tested.
 - Have older hardware and want something lean and mean.
 
 ## Download Debian
@@ -21,47 +21,52 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
 
 ### Installation
 #### Steps
-1. Preparing installation media
-   1. If using a Ventoy USB drive, simply insert it and boot (i.e. continue from step #3).
-   2. If using Windows:-
-      a. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
-      b. DVD - burn the downloaded ISO to a DVD
-   3. (Highly Recommended) If using Linux or macOS use the following steps to:
-      a. Burn the ISO image to DVD using Brasero or any other image writing software or
-      b. USB
-         - From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
-            ```
-            ...
-            loop21        7:21   0   347M  1 loop /snap/wine-platform-runtime/390
-            sda           8:0    0 931.5G  0 disk
-            ├─sda1        8:1    0   128M  0 part
-            └─sda2        8:2    0 931.4G  0 part
-            sdb           8:16   1  28.9G  0 disk
-            └─sdb1        8:17   1  28.9G  0 part /media/kkiragu/docs
-            sdc           8:32   1  28.9G  0 disk
-            └─sdc1        8:33   1  28.9G  0 part
-            sr0          11:0    1  1024M  0 rom
-            nvme0n1     259:0    0 476.9G  0 disk
-            ├─nvme0n1p1 259:1    0 445.2G  0 part /
-            ├─nvme0n1p2 259:2    0     1K  0 part
-            ...
-            ```
-            Where in the above case, the USB drive is `sdb1`
+1. Preparing Linux installation media
+   - If using a Ventoy USB drive, simply insert it and boot (i.e. continue to step #2).
+   - If not using Ventoy (but also using Windows):-
+     a. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
+     b. DVD - burn the downloaded ISO to a DVD
+   - (Highly Recommended) If using Linux or macOS use the following steps to:
+     a. Burn the ISO image to DVD using Brasero or any other image writing software or
+     b. USB
+        - From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
+          ```
+          ...
+          loop21        7:21   0   347M  1 loop /snap/wine-platform-runtime/390
+          sda           8:0    0 931.5G  0 disk
+          ├─sda1        8:1    0   128M  0 part
+          └─sda2        8:2    0 931.4G  0 part
+          sdb           8:16   1  28.9G  0 disk
+          └─sdb1        8:17   1  28.9G  0 part /media/kkiragu/docs
+          sdc           8:32   1  28.9G  0 disk
+          └─sdc1        8:33   1  28.9G  0 part
+          sr0          11:0    1  1024M  0 rom
+          nvme0n1     259:0    0 476.9G  0 disk
+          ├─nvme0n1p1 259:1    0 445.2G  0 part /
+          ├─nvme0n1p2 259:2    0     1K  0 part
+          ...
+          ```
+          Where in the above case, the USB drive is `sdb1`
 
-         - You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
-         - Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
-           ```
-           #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
-           cp debian-file.iso /dev/sdX
-           sync #ensures files are securely copied
-           ```
+        - You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
+        - Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
+          ```
+          #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
+          cp debian-file.iso /dev/sdX
+          sync #ensures files are securely copied
+          ```
 
 2. In your BIOS settings, ensure you can boot to USB/DVD on the computer where Debian is to be installed.
 3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts.
-4. If installing Dual Boot Windows and Linux:
-   -  Debian install will prompt 
-5. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
-6. Once installation is complete, proceed to configure your OS for updates etc.
+4. IMPORTANT: If installing Dual Boot Windows and Linux: Once you get to **Partition Disks** eg. see [screenshot](https://www.debugpoint.com/wp-content/uploads/2023/11/Select-manual-partitioning.jpg): 
+   - Select **Manual**
+   - It will scan your hard-drives and show you a screenshot similar to [this](https://www.debugpoint.com/wp-content/uploads/2023/11/Choose-the-partition-for-Debian-12-installation.jpg).
+   - Determine the ~ 30 GB partition and select it. If unsure of the right partition, take a picture and share with an experienced Linux users.
+   - Once sure, press enter to set up the partition.
+   - Select "Finish partitioning and write changes to disk"
+5. Proceed with installation.
+6. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
+7. Once installation is complete, proceed to configure your OS for updates etc.
 
 ### Configuration of OS for Updates and Package Installations
 > [!NOTE]
