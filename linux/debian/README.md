@@ -11,7 +11,7 @@ Why Debian GNU/Linux? Debian might be right for you if you:
 
 Download an ISO containing the last version of Debian which also bundles non-free firmware from this link: https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ (scroll down to the bottom of page and download .iso file)
 
-1. Windows - download it using your prefered download manager or browser (Chrome / Firefox)
+1. Windows - download it using your preferred download manager or browser (Chrome / Firefox)
 2. Linux command line download:
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
@@ -22,63 +22,65 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
 ### Installation
 #### Steps
 1. Preparing installation media
-    1. If using Windows:-
-       1. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
-       2. DVD - burn the downloaded ISO to a DVD
-    2. (Highly Recommended) If using Linux or MacOS use the following steps to:
-       1. Burn the ISO image to DVD using Brasero or any other image writing software or
-       2. USB
-          1. From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
-             ```
-             ...
-             loop21        7:21   0   347M  1 loop /snap/wine-platform-runtime/390
-             sda           8:0    0 931.5G  0 disk
-             ├─sda1        8:1    0   128M  0 part
-             └─sda2        8:2    0 931.4G  0 part
-             sdb           8:16   1  28.9G  0 disk
-             └─sdb1        8:17   1  28.9G  0 part /media/kkiragu/docs
-             sdc           8:32   1  28.9G  0 disk
-             └─sdc1        8:33   1  28.9G  0 part
-             sr0          11:0    1  1024M  0 rom
-             nvme0n1     259:0    0 476.9G  0 disk
-             ├─nvme0n1p1 259:1    0 445.2G  0 part /
-             ├─nvme0n1p2 259:2    0     1K  0 part
-             ...
-             ```
-             Where in the above case, the USB drive is `sdb1`
+   1. If using a Ventoy USB drive, simply insert it and boot (i.e. continue from step #3).
+   2. If using Windows:-
+      a. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
+      b. DVD - burn the downloaded ISO to a DVD
+   3. (Highly Recommended) If using Linux or macOS use the following steps to:
+      a. Burn the ISO image to DVD using Brasero or any other image writing software or
+      b. USB
+         - From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
+            ```
+            ...
+            loop21        7:21   0   347M  1 loop /snap/wine-platform-runtime/390
+            sda           8:0    0 931.5G  0 disk
+            ├─sda1        8:1    0   128M  0 part
+            └─sda2        8:2    0 931.4G  0 part
+            sdb           8:16   1  28.9G  0 disk
+            └─sdb1        8:17   1  28.9G  0 part /media/kkiragu/docs
+            sdc           8:32   1  28.9G  0 disk
+            └─sdc1        8:33   1  28.9G  0 part
+            sr0          11:0    1  1024M  0 rom
+            nvme0n1     259:0    0 476.9G  0 disk
+            ├─nvme0n1p1 259:1    0 445.2G  0 part /
+            ├─nvme0n1p2 259:2    0     1K  0 part
+            ...
+            ```
+            Where in the above case, the USB drive is `sdb1`
 
-          2. You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
-          3. Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
-             ```
-             #NB: Verify sdX is the usb drive you wish to create a bootable from eg cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
-             cp debian-file.iso /dev/sdX
-             sync #ensures files are securely copied
-             ```
+         - You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
+         - Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
+           ```
+           #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
+           cp debian-file.iso /dev/sdX
+           sync #ensures files are securely copied
+           ```
 
 2. In your BIOS settings, ensure you can boot to USB/DVD on the computer where Debian is to be installed.
 3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts.
-4. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
-5. Once installation is complete, proceed to configure your OS for updates etc.
+4. If installing Dual Boot Windows and Linux:
+   -  Debian install will prompt 
+5. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
+6. Once installation is complete, proceed to configure your OS for updates etc.
 
 ### Configuration of OS for Updates and Package Installations
 > [!NOTE]
 > During Debian installation, you created a primary user/username. Those credentials will come in handy in the next steps.
-> If you're new to Linux and command line, you likely will want to substituate any instances of the editor usage of `vi` with beginner editors eg `gedit` or `kwrite` or `nano`.
+> If you're new to Linux and command line, you likely will want to substitute any instances of the editor usage of `vi` with beginner editors e.g. `gedit` or `kwrite` or `nano`.
 > Command line newbies - when prompted to enter a password, nothing will appear on the screen. Don't panic!
 
-Your Debian installation needs to be configured to pull and apply updates in future:
+Your Debian installation needs to be configured to pull and apply updates in the future:
 1. Start a terminal session
 2. (Optional) Add new user(s):
-  ```
-  sudo su - root
-  adduser newusername sudo
-  ```
-  OR
-  ```
-  # Add an existing user to list of sudoers
-  usermod -aG sudo newusername
-  ```
-
+   ```
+   sudo su - root
+   adduser newusername sudo
+   ```
+   OR
+   ```
+   # Add an existing user to list of sudoers
+   usermod -aG sudo newusername
+   ```
 3. Test if you actually have root privileges:
    1. Enter command (you will be prompted to enter your password): `sudo su - root`
    2. If no error messages occur, then that means you’re now root!
@@ -92,9 +94,9 @@ Your Debian installation needs to be configured to pull and apply updates in fut
       - Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
       - Start: `vi /path/to/file/to/be/edited`
 5. Edit sources file located at: `/etc/apt/sources.list`
-   1. Backup sources.list in case something goes awry:
+   1. Backup `sources.list` in case something goes awry:
       ```
-      if [ ! -d "~/backup" ]; then
+      if [ ! -d ~/backup ]; then
           mkdir ~/backup
       fi
       cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
@@ -131,7 +133,7 @@ Your Debian installation needs to be configured to pull and apply updates in fut
      sudo apt full-upgrade
      ```
 
-### Older Debian Versions eg Stretch and Buster
+### Older Debian Versions e.g. Stretch and Buster
 
 #### Update Debian 9.X Stretch OR (Upgrade Debian 7.X Jessie to Debian 8.X Stretch)
 
@@ -164,22 +166,22 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
    sudo dnf install zsh curl git powerline
    ```
 
-2. Change to desired user which you want to install oh-my-zsh eg.: `su kkiragu`
+2. Change to desired user which you want to install oh-my-zsh  e.g.: `su kkiragu`
 3. Run oh my zsh install script:
    ```
    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
    ```
-4. Install theme eg powerlevel9k:
+4. Install theme e.g. powerlevel9k:
    ```
    git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
    ```
-5. Run the following (NB: This updattes `.zshrc` file):
+5. Run the following (NB: This updates `.zshrc` file):
    ```
    sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
    ```
 6. Re-run steps 3 -> 5 for other users
 7. To make zsh (oh-my-zsh) default, log out completely and log back in for changes to take effect.
-8. Run the following to change prompt color (NB: This updattes `.zshrc` file):
+8. Run the following to change prompt color (NB: This updates `.zshrc` file):
 
    ```
    strPowerlevel9k=$(cat <<'EOF'
@@ -218,7 +220,7 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
 2. Select `vim.basic`
 
 ## Install Google Chrome
-Debian comes with Firefox installed but you can add Chrome if you like.
+Debian comes with Firefox installed, but you can add Chrome if you like.
 
 1. Open a terminal session
 2. Append the sources list to include the Google Chrome repository with the following command:
@@ -240,12 +242,12 @@ Debian comes with Firefox installed but you can add Chrome if you like.
    ```
 
 ## Network and Printing Setup
-### Configure Internet Sharing (Share WiFi via Ethernet Port)
-1. Leave WiFi connection untouched
+### Configure Internet Sharing (Share Wi-Fi via Ethernet Port)
+1. Leave Wi-Fi connection untouched
 2. Edit the Ethernet connection (Wired) and change IPv4 setting to “Shared to other Computers”
 3. Restart network manager service if need be.
 
-### Configure VPN eg by Keep Solids (VPN Unlimited)
+### Configure VPN e.g. by Keep Solids (VPN Unlimited)
 TBD
 
 ### Install & Configure Printing, LibreOffice:
@@ -261,10 +263,10 @@ TBD
 ###  Blank Screen
 1. Likely causes:
    1. Missing display drivers
-   2. Incomplete install of display drivers
+   2. Incomplete installation of display drivers
 2. Potential solutions:
    1. Edit Grub on start:
-      1. Select a Grub option but but do NOT press “enter”
+      1. Select a Grub option but do NOT press “enter”
       2. Press ‘e’ to edit
       3. Look for a line ending in splash quiet and edit it so it has somewhere in the line: nomodeset
       4. If above does not work also try pci=nomsi
@@ -273,7 +275,7 @@ TBD
 
 Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
 
-List existing keyrings using `apt-key list` but filter for the last 8 chars of the older existing key eg:
+List existing keyrings using `apt-key list` but filter for the last 8 chars of the older existing key e.g.:
 ```
 apt-key list | grep anydesk -B 3 | grep -Eo '[A-Z0-9]{4} [A-Z0-9]{4}$' | sed 's/ //g'
 ```
@@ -286,7 +288,7 @@ apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.
 apt-key export 77E11517 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/php.gpg
 ```
 
-Delete outdate or invalid keyrings:
+Delete outdated or invalid keyrings:
 ```
 apt-key del "DAC8....."
 ```
