@@ -23,11 +23,11 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
 #### Steps
 1. Preparing Linux installation media
    - If using a Ventoy USB drive, simply insert it and boot (i.e. continue to step #2).
-   - If not using Ventoy (but also using Windows):-
-     a. USB - [Ubuntu based guide - Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)
+   - If not using Ventoy (but also using Windows):<br>
+     a. USB - [Ubuntu based guide - NB: Remember to use the Debian ISO and not an Ubuntu ISO](https://ubuntu.com/tutorials/create-a-usb-stick-on-windows#1-overview)<br>
      b. DVD - burn the downloaded ISO to a DVD
-   - (Highly Recommended) If using Linux or macOS use the following steps to:
-     a. Burn the ISO image to DVD using Brasero or any other image writing software or
+   - (Highly Recommended) If using Linux or macOS use the following steps to:<br>
+     a. Burn the ISO image to DVD using Brasero or any other image writing software or<br>
      b. USB
         - From the terminal, check USB drive from the command line, type `lsblk` or `dmesg` and get output as follows:
           ```
@@ -56,12 +56,12 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
           sync #ensures files are securely copied
           ```
 
-2. In your BIOS settings, ensure you can boot to USB/DVD on the computer where Debian is to be installed.
-3. Boot laptop/desktop with USB/DVD containing iso and proceed with the prompts.
-4. IMPORTANT: If installing Dual Boot Windows and Linux: Once you get to **Partition Disks** eg. see [screenshot](https://www.debugpoint.com/wp-content/uploads/2023/11/Select-manual-partitioning.jpg): 
+2. Check boot sequence in your BIOS settings, ensure you can boot using USB/DVD and that it's first option.
+3. Boot the laptop/desktop with USB/DVD containing the Debian iso and proceed with the prompts.
+4. IMPORTANT: If installing Dual Boot Windows and Linux (please read this guide first if you haven't - [Dual Boot Windows & Linux](../dual-boot-linux-windows.md): Once you get to **Partition Disks** eg. see [screenshot](https://www.debugpoint.com/wp-content/uploads/2023/11/Select-manual-partitioning.jpg):
    - Select **Manual**
-   - It will scan your hard-drives and show you a screenshot similar to [this](https://www.debugpoint.com/wp-content/uploads/2023/11/Choose-the-partition-for-Debian-12-installation.jpg).
-   - Determine the ~ 30 GB partition and select it. If unsure of the right partition, take a picture and share with an experienced Linux users.
+   - It will scan your hard-drives and display different partitions on your computer similar to [this](https://www.debugpoint.com/wp-content/uploads/2023/11/Choose-the-partition-for-Debian-12-installation.jpg).
+   - Determine the ~ 30 GB partition (i.e. the one you shrunk/set up earlier) and select it. If unsure of the right partition, take a picture and share with an experienced Linux user.
    - Once sure, press enter to set up the partition.
    - Select "Finish partitioning and write changes to disk"
 5. Proceed with installation.
