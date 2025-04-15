@@ -215,13 +215,15 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
 11. For user postgres (or root): Install but don’t set it as default. Then start by:l0
 
     ```
-    sudo -u postgres zsh
-    sudo -u root zsh
+    sudo -i -u postgres zsh
+    sudo -i -u root zsh
     ```
 
 ### (Optional) Change default Editor to vim
 
-1. Type: `sudo update-alternatives --config editor`
+1. Type:
+   - `select-editor` OR
+   - `sudo update-alternatives --config editor`
 2. Select `vim.basic`
 
 ## Install Google Chrome
