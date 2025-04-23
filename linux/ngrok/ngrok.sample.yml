@@ -1,0 +1,7 @@
+version: "2"
+authtoken: ngrok_authtoken_goes_here
+tunnels:
+  ssh:
+    proto: tcp
+    addr: 22
+
