@@ -10,7 +10,7 @@ You can use your home Debian PC or laptop as a server. You can use this for test
      - Disable Password Authentication: `PasswordAuthentication no`
    - OR run the following as user `root`:
    ```
-   if [ ! -d "~/backup" ]; then
+   if [ ! -d ~/backup ]; then
     mkdir ~/backup
    fi
    timestamp=d$(date +"%Y%m%d").t$(date +"%H%M%S")

@@ -98,35 +98,33 @@ Your Debian installation needs to be configured to pull and apply updates in the
    - vi/vim - shell application that's ideal for experienced Linux users
       - Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
       - Start: `vi /path/to/file/to/be/edited`
-5. Edit sources file located at: `/etc/apt/sources.list`
-   1. Backup `sources.list` in case something goes awry:
-      ```
-      if [ ! -d ~/backup ]; then
-          mkdir ~/backup
-      fi
-      cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
-      ```
-   2. Open an editor to make the changes:
-      ```
-      sudo gedit /etc/apt/sources.list
-      ```
-      OR for vi folks:
-      ```
-      sudo vi /etc/apt/sources.list
-      ```
-   3. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
-      ```
-      deb http://deb.debian.org/debian/ bookworm main
-      deb-src http://deb.debian.org/debian/ bookworm main
-      deb http://deb.debian.org/debian/ bookworm-updates main
-      deb-src http://deb.debian.org/debian/ bookworm-updates main
-      deb http://security.debian.org/debian-security bookworm-security main
-      deb-src http://security.debian.org/debian-security bookworm-security main
+   5. Edit sources file located at: `/etc/apt/sources.list`
+      1. Backup `sources.list` in case something goes awry:
+         ```
+         if [ ! -d ~/backup ]; then
+             mkdir ~/backup
+         fi
+         cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
+         ```
+      2. Use vi editor to make the changes:
+         ```
+         sudo vi /etc/apt/sources.list
+         ```
+      3. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
+         ```
+         deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+         deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
 
-      # Only add the backports if they already exist
-      deb http://deb.debian.org/debian bookworm-backports main
-      deb-src http://deb.debian.org/debian bookworm-backports main
-      ```
+         deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+         deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+
+         deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+         deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+
+         # Only add the backports if they already exist
+         deb http://deb.debian.org/debian bookworm-backports main
+         deb-src http://deb.debian.org/debian bookworm-backports main
+         ```
 
 6. Update your Debian OS installation:
    - Fetch latest version of the package list from Debian repo and 3rd party repos:
