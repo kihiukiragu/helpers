@@ -10,12 +10,12 @@
    ```
 2.
 
-# Auto Restart ngrok
+# Create ngrok service
 
 Create an ngrok.service:
 
 ```
-sudo cat .../quatrix-systems-config/erp/utils/ngrok.service > /etc/systemd/system/ngrok.service
+sudo cat ngrok.sample.service > /etc/systemd/system/ngrok.service
 ```
 
 Create ngrok.yml:
@@ -34,18 +34,25 @@ systemctl start ngrok.service
 
 ## Notification of ngrok Domain Change via Email
 
-Create a crontab as non-root user eg `ponty-erp`:
+Create a crontab as non-root (e.g. under your own user account):
 
 ```
 # Check ngrok domain every 20 minutes and email if changed
-*/20 * * * * /home/ponty/git/quatrix-systems-config/erp/utils/ngrok/last_known_domain.sh
+*/20 * * * * ~/Documents/tech/git/helpers/linux/ngrok/last_known_domain.sh
 ```
 
-Create an `.env` in dir where `last_known_domain.sh` is located with following details:
+Create an `.env` in dir where `last_known_domain.sh` is located with following details (if using sendgrid to send email):
 ```
-last_known_domain_filename=.podserv.domain
+last_known_domain_filename=.ngrok.domain
+host=work-pc
 export SENDGRID_API_KEY='sendgrid_api_key_to_enable_email'
-venv=/home/ponty-erp/.venv/imagesearch/bin/python
+venv=/home/username/.venv/imagesearch/bin/python
 export DOMAIN_EMAIL_ADDRESS_FILE=/..pathToEmailList/domain_email_list.csv
 export DOMAIN_EMAIL_TEMPLATE_ID='d-temp-id'
+```
+
+OR if only using ssh to send the new domain:
+```
+last_known_domain_filename=.ngrok.domain
+host=work-pc
 ```
