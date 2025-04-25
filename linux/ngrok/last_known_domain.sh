@@ -12,6 +12,8 @@ timestamp=$(date +%b' '%d' '%T)
 
 current_domain=$(curl http://127.0.0.1:4040/api/tunnels --silent | jq '.tunnels | .[] | .public_url' | tr -d '"')
 
+host=$(cat /etc/hostname)
+
 if [ "$current_domain" == "" ]; then
     echo "$timestamp: WARNING: ngrok is NOT running...Attempting to start" >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
 
@@ -27,11 +29,11 @@ if [ "$current_domain" == "" ]; then
         echo "$timestamp: Sending new domain: $current_domain to replace older one: $domain"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
         echo "$timestamp: $current_domain > $script_dir/$last_known_domain_filename"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
         echo $current_domain > $script_dir/$last_known_domain_filename
-        echo "$timestamp: $venv $script_dir/send_last_know_domain.py $current_domain"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
-        log_domain_cmd="echo $current_domain > ~/ngrok/convent-$(date +"%Y-%m-%d").log"
+        echo "$timestamp: $venv $script_dir/send_last_know_domain.py $current_domain"  >> $script_dir/logs/$host-$(date +"%Y-%m-%d").log
+        log_domain_cmd="echo $current_domain > ~/ngrok/$host-$(date +"%Y-%m-%d").log"
         ssh -l kkiragu chelwoodplace.com "${log_domain_cmd}"
     else
-        echo "$timestamp: Internet Down, try in the next iteration"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
+        echo "$timestamp: Internet Down, try in the next iteration"  >> $script_dir/logs/$host-$(date +"%Y-%m-%d").log
     fi
 else
     # domains don't match, so send new current domain'
@@ -45,7 +47,7 @@ else
             echo "$timestamp: $current_domain > $script_dir/$last_known_domain_filename"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
             echo $current_domain > $script_dir/$last_known_domain_filename
             echo "$timestamp: $venv $script_dir/send_last_know_domain.py $current_domain"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
-            log_domain_cmd="echo $current_domain > ~/ngrok/convent-$(date +"%Y-%m-%d").log"
+            log_domain_cmd="echo $current_domain > ~/ngrok/$host-$(date +"%Y-%m-%d").log"
             ssh -l kkiragu chelwoodplace.com "${log_domain_cmd}"
         else
             echo "$timestamp: Internet Down, try in the next iteration"  >> $script_dir/logs/ngrok-restart-$(date +"%Y-%m-%d").log
