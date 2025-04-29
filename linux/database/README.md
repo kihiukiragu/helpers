@@ -32,8 +32,8 @@ There are 2 ways to install PostgreSQL. Either you install the version that ship
       `psql`
       - Create roles/user, databases and queries in here.
       - To exit or quit from `psql` type: `\q`
-   4. (Recommended) Secure user postgres - TBD
-   5. (Recommended) Improve postgres performance - TBD
+   5. (Recommended) Secure user postgres - TBD
+   6. (Recommended) Improve postgres performance - TBD
 
 ## Upgrading/Migrating Databases
 If you have version 15 and 17 installed on the same server, it is possible to upgrade the databases running on the 15 cluster to 17:
@@ -51,7 +51,7 @@ If you have version 15 and 17 installed on the same server, it is possible to up
   ```
   sudo pg_dropcluster 17 main --stop
   ```
-- Upgrade databases on cluster 15 (this will upgrade 15 to any newer version eg 17):
+- Upgrade databases on cluster 15 (this will upgrade 15 to any newer version e.g. 17):
   ```
   sudo pg_upgradecluster 15 main
   ```
@@ -69,6 +69,22 @@ After installing a newer version e.g. you install postgresql-17 **AND** successf
 ```
 apt remove --purge postgresql-15 postgresql-client-15
 ```
+
+## Installing and Using pgAdmin
+pgAdmin is a helpful tool to easily run queries on the fly similar to psql but can come in handy if you:
+- Don't have command-line access.
+- Would like to run queries from a file, save them in a certain order.
+- You simply prefer a UI client to run SQL and not the psql client.
+- To install pgAdmin4
+  ```
+  curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+  sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+  sudo apt install pgadmin4
+  ```
+- You might need to edit your local `pg_hba.conf` file e.g. `vi /etc/postgresql/17/main/pg_hba.conf` and add the following line (below `# IPv4 local connections:` line):
+  ```
+  host        all                 127.0.0.1/32                trust
+  ```
 
 ## Access a Remove Database via SSH Tunneling
 ### Using Terminal
@@ -90,19 +106,13 @@ The safer way to access a remote database is to use [SSH Tunneling](https://en.w
 
 Steps:
 - Ensure postgres is installed on the ssh tunnel host (ie the PC you're currently using)
-- Install pgAdmin4
-  ```
-  curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
-  sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
-  sudo apt install pgadmin4
-  ```
-- Start pgAdmin4 (If using a menu based Desktop Environment eg xfce or Cinnamon, it will likely be in the Applications menu under 'Development')
+- Start pgAdmin4 (If using a menu based Desktop Environment e.g. xfce or Cinnamon, it will likely be in the Applications menu under 'Development')
 - Create a new Server
   - General tab: Give the connection a name of your choice eg `customer-db-ssh-tunnel`
   - Connection tab:
     - Host name/address (host is the PC you are using): `localhost`
     - Port (default port on your local PC): `5432`
-    - Maintanance database (enter the database that you have been granted access to remotely): `customer`
+    - Maintenance database (enter the database that you have been granted access to remotely): `customer`
     - Username (your username on the local PC): `pomollo`
   - SSH Tunnel tab:
     - Tunnel host (remote server where the db resides): `server.remote.example.com`
