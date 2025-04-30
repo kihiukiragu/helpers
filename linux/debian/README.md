@@ -157,6 +157,20 @@ deb http://archive.debian.org/debian-security/ buster/updates main contrib non-f
 deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 ```
 
+## Add New Users
+To add a new user e.g. for `Jane Doe` run the following:
+```
+sudo adduser jdoe
+```
+To ensure Jane resets the password on first login or password attempt:
+```
+chage -d 0 jdoe
+```
+
+OPTIONAL - You can also create ssh keys for this new user if they will require for ssh authentication later. Steps:
+1. Switch to the new user: `sudo su - jdoe`
+2. Run: `ssh-keygen -t ecdsa`. This also creates the folder `.ssh` with the necessary permissions. Though not recommended, do not change any default option or enter any passphrase.
+
 ## Terminal Application Customizations (Optional but recommended)
 ### Install ZSH and Oh-My-Zsh (Optional)
 1. Install zsh and dependencies (zsh is the base of oh-my-zsh):
