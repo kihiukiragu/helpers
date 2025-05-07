@@ -5,35 +5,45 @@
 > Versions mentioned in this document might not be current if this document has not been updated in a while
 
 There are 2 ways to install PostgreSQL. Either you install the version that ships with Debian (easiest and recommended for stability) OR you install the current release from PostgreSQL( newer but not as stable):
-- Stable: PostgreSQL 15 (Current Stable version for Debian repositories) - if on Debian 12.X, simply run the following:
- ```
- sudo apt install postgresql postgresql-contrib
- ```
-- PostgreSQL 16 or 17 (if you want latest PostgreSQL features):
-   1. Add PostgreSQL repo key:
-      ```
-      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
-      ```
-   2. Add PostgreSQL repo to your Debian installation repo lists folder:
-      ```
-      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
-      ```
-   3. Install psql server and client: `apt -y install postgresql-17`
-   4. Change user to the `postgres` user and start creating databases, tables and running SQL queries:
-      - Change user:
-      ```
-      sudo su - postgres
-      ```
-      OR
-      ```
-      sudo -u postgres zsh #if using oh-my-zsh
-      ```
-      - Access the postgres terminal based front end `psql`:
-      `psql`
-      - Create roles/user, databases and queries in here.
-      - To exit or quit from `psql` type: `\q`
-   5. (Recommended) Secure user postgres - TBD
-   6. (Recommended) Improve postgres performance - TBD
+
+### Install Debian's Default PostgreSQL Version
+The simplest PostgreSQL install( this will install whatever the current stable PostgreSQL that ships with your Debian OS):
+```
+sudo apt install postgresql postgresql-client
+```
+
+### Install PostgreSQL via PostgreSQL Apt Repository
+You might want flexibility to be able to pick whatever a certain PostgreSQL version. For that follow the following steps:
+1. Add PostgreSQL repo key:
+   ```
+   sudo apt install -y postgresql-common
+   sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+   ```
+2. Install psql server and client (this can be adjusted to install 15,16, or even 18 etc.): 
+   ```
+   sudo apt -y install postgresql postgresql-client`
+   ```
+   OR
+   ```
+   sudo apt -y install postgresql-17 postgresql-client17`
+   ```
+3. Installing postgres in Linux results in a user `postgres` being created. Change to this user i.e. `postgres` and you can then start creating databases, tables and running SQL queries:
+   - Change user:
+     ```
+     sudo su - postgres
+     ```
+     OR
+     ```
+     sudo -u postgres zsh #if using oh-my-zsh
+     ```
+   - Access the postgres terminal based application `psql`:
+     ```
+     psql
+     ```
+   - Create roles/user, databases and queries in here.
+   - To exit or quit from `psql` type: `\q`
+4. (Recommended) Secure user postgres - TBD
+5. (Recommended) Improve postgres performance - TBD
 
 ## Upgrading/Migrating Databases
 If you have version 15 and 17 installed on the same server, it is possible to upgrade the databases running on the 15 cluster to 17:
@@ -66,8 +76,13 @@ If you have version 15 and 17 installed on the same server, it is possible to up
 > If not done right, this will delete all your databases running on the version you delete. Be careful with this!
 
 After installing a newer version e.g. you install postgresql-17 **AND** successfully upgrading to a new cluster, you might want to remove and purge older version postgresql-15:
+For zsh users (asterisk must be enclosed in quotes):
 ```
-apt remove --purge postgresql-15 postgresql-client-15
+sudo apt remove --purge postgresql-'*'
+```
+For bash users:
+```
+sudo apt remove --purge postgresql-*
 ```
 
 ## Installing and Using pgAdmin
