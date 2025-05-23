@@ -85,20 +85,144 @@ For bash users:
 sudo apt remove --purge postgresql-*
 ```
 
+## Learning SQL using PostgreSQL
+### Basic Queries
+
+### Joins, Unions etc
+Watch the following [YouTube clip](https://www.youtube.com/watch?v=FprFu75BoE4) to understand what joins are.
+
+## TBD - Securing PostgreSQL Databases
+### Roles vs Users
+In newer versions of postgresql, roles and users are almost identical, except for:
+- Roles by default have `nologin` permission.
+- Users by default have `login` permissions.
+
+Roles can also be used to manage permissions of a group of users that need the same identical rights eg. You have say Operation staff that need read only access to a database. You can do the following:
+1. Create a role called `role_operation`.
+   Bash:
+   ```
+   psql -c "CREATE ROLE role_operation;"
+   psql -c "GRANT pg_read_all_data TO role_operation;"
+   ```
+   OR in psql:
+   ```sql
+   CREATE ROLE role_operation;
+   GRANT pg_read_all_data TO role_operation;
+   ```
+2. Create Operation staff users and add them to this role e.g.:
+   Bash:
+   ```
+   psql -c "CREATE USER jdoe WITH ENCRYPTED password 'jdoe1234';"
+   ```
+   OR in psql or pgAdmin:
+   ```sql
+   CREATE USER jdoe WITH ENCRYPTED password 'jdoe1234';
+   GRANT role_operation TO jdoe;
+   ```
+
+### Authentication Modes
+> [!NOTE]
+> Please read the official documentation on different authentication methods [here](https://www.postgresql.org/docs/current/auth-methods.html) 
+
+- Peer & Ident
+- `md5` vs `scram-sha-256`
+    - `md5` has been used for years but has some potential security flaws e.g. collision attacks.
+    - `scram-sha-256`:
+        - Edit postgresql.conf  (eg `sudo vi /etc/postgresql/17/main/postgresql.conf`) and change:
+          ```
+          #password_encryption = md5		# md5 or scram-sha-256
+          ```
+          And make it look like:
+          ```
+          password_encryption = scram-sha-256
+          ```
+        - Change `pg_hba.conf` (Under **IPv4 local connection** section):
+          ```
+          host    all             all             127.0.0.1/32            md5
+          ```
+          To:
+          ```
+          host    all             all             127.0.0.1/32            scram-sha-256
+          ```
+        - Restart postgres: `sudo service postgresql restart`.
+        - Check to see if the encryption method has changed:
+          ```sql
+          SHOW password_encryption;
+          ```
+        - Check user roles and encryption:
+          ```sql
+          SELECT rolpassword, rolname FROM pg_authid;
+          ```
+          Which will result in output similar to:
+          ```
+                       rolpassword             |           rolname
+          -------------------------------------+-----------------------------
+                                               | pg_database_owner
+                                               | pg_read_all_data
+                                               | pg_write_all_data
+                                               | pg_monitor
+                                               | pg_read_all_settings
+                                               | pg_read_all_stats
+                                               | pg_stat_scan_tables
+                                               | pg_read_server_files
+                                               | pg_write_server_files
+                                               | pg_execute_server_program
+                                               | pg_signal_backend
+                                               | pg_checkpoint
+                                               | pg_maintain
+                                               | pg_use_reserved_connections
+                                               | pg_create_subscription
+                                               | postgres
+           md53cd53005332375a8d8ed9f8b01b8966d | pomollo
+          (17 rows)
+          ```
+        - Update user passwords so that they conform to `scram-sha-256`:
+          ```sql
+          ALTER USER <user> WITH PASSWORD '<password>';
+          ```
+        - Re-check user roles and encryption to verify update:
+          ```sql
+          SELECT rolpassword, rolname FROM pg_authid;
+          ```
+          And the password should look as follows:
+          ```
+                       rolpassword             |           rolname
+          -------------------------------------+-----------------------------
+                                               | pg_database_owner
+                                               | pg_read_all_data
+                                               | pg_write_all_data
+                                               | pg_monitor
+                                               | pg_read_all_settings
+                                               | pg_read_all_stats
+                                               | pg_stat_scan_tables
+                                               | pg_read_server_files
+                                               | pg_write_server_files
+                                               | pg_execute_server_program
+                                               | pg_signal_backend
+                                               | pg_checkpoint
+                                               | pg_maintain
+                                               | pg_use_reserved_connections
+                                               | pg_create_subscription
+                                               | postgres
+           SCRAM-SHA-256$4096................= | pomollo
+          (17 rows)
+          ```
+- LDAP vs Kerberos
+
 ## Installing and Using pgAdmin
 pgAdmin is a helpful tool to easily run queries on the fly similar to psql but can come in handy if you:
 - Don't have command-line access.
 - Would like to run queries from a file, save them in a certain order.
 - You simply prefer a UI client to run SQL and not the psql client.
-- To install pgAdmin4
+- To install pgAdmin4:
   ```
   curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
   sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
   sudo apt install pgadmin4
   ```
-- You might need to edit your local `pg_hba.conf` file e.g. `vi /etc/postgresql/17/main/pg_hba.conf` and add the following line (below `# IPv4 local connections:` line):
+- You might need to edit your local `pg_hba.conf` file e.g. `vi /etc/postgresql/17/main/pg_hba.conf` and add the following line (right below the line `# IPv4 local connections:` line):
   ```
-  host        all                 127.0.0.1/32                trust
+  host    all             all             127.0.0.1/32            trust
   ```
 
 ## Access a Remove Database via SSH Tunneling
