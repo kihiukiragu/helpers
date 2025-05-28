@@ -91,6 +91,67 @@ sudo apt remove --purge postgresql-*
 ### Joins, Unions etc
 Watch the following [YouTube clip](https://www.youtube.com/watch?v=FprFu75BoE4) to understand what joins are.
 
+Let's say you have the following tables:
+- tc_devices - holds GPS traccar devices' details. A device can send multiple position records.
+- tc_position - holds position data that's constantly sent to the traccar server and saved in the database. A position record can only be associated with one device.
+
+```mermaid
+erDiagram
+    tc_devices ||--o{ tc_positions : "has"
+    tc_positions }o--|| tc_devices : "belongs to"
+
+    tc_devices {
+        integer id
+        string name
+        string uniqueid
+        string lastupdate
+        string groupid
+    }
+
+    tc_positions {
+        integer id
+        integer deviceid
+        double latitude
+        double longitude
+        double course
+        double speed
+    }
+```
+We can run the following query to fetch devices:
+```sql
+SELECT * FROM tc_devices;
+```
+
+We can also run the following to fetch position data (be cautious to use small time ranges due to overwhelming data in the tc_position table):
+```sql
+-- Get Positions between given dates but only displays the deviceid that is not very helpful
+SELECT position.deviceid,
+       position.servertime,
+       position.attributes,
+       position.speed
+FROM tc_positions AS position
+WHERE position.servertime > TIMESTAMP '2025-05-27 13:07:30' and
+      position.servertime < TIMESTAMP '2025-05-27 13:07:33';
+```
+
+However, we would like to view what the `name` (License Plate number) field of the device that's sent the position record. To do this we can take advantage of the relationship between these two tables.
+Every position record has a field `deviceid` which is the primary key field representing the given device responsible for this data.
+
+We can therefore combine these two tables using a JOIN query (LEFT JOIN) in this case to look as follows:
+```sql
+-- With License Plate
+SELECT device.name AS licence_plate,
+       position.servertime,
+       position.attributes,
+       position.speed
+FROM tc_positions AS position
+LEFT JOIN tc_devices AS device ON position.deviceid = device.id
+WHERE position.servertime > TIMESTAMP '2025-05-27 13:07:30' and
+      position.servertime < TIMESTAMP '2025-05-27 13:07:33';
+```
+
+In the above query, we are able to see the license plates for each position data record.
+
 ## TBD - Securing PostgreSQL Databases
 ### Roles vs Users
 In newer versions of postgresql, roles and users are almost identical, except for:
