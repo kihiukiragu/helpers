@@ -91,6 +91,29 @@ sudo apt remove --purge postgresql-*
 ### Joins, Unions etc
 Watch the following [YouTube clip](https://www.youtube.com/watch?v=FprFu75BoE4) to understand what joins are.
 
+Let's say you have the following tables:
+```mermaid
+erDiagram
+    tc_devices ||--o{ tc_positions : "has"
+    tc_positions }o--|| tc_devices : "belongs to"
+
+    tc_devices {
+        integer id
+        string name
+        string uniqueid
+        string lastupdate
+        string groupid
+    }
+
+    tc_positions {
+        integer id
+        integer deviceid
+        double latitude
+        double longitude
+        double course
+    }
+```
+
 ## TBD - Securing PostgreSQL Databases
 ### Roles vs Users
 In newer versions of postgresql, roles and users are almost identical, except for:
