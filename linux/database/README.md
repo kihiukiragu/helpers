@@ -88,7 +88,7 @@ sudo apt remove --purge postgresql-*
 ## Learning SQL using PostgreSQL
 ### Basic Queries
 
-### Joins, Unions etc
+### Joins Between Tables
 Watch the following [YouTube clip](https://www.youtube.com/watch?v=FprFu75BoE4) to understand what joins are.
 
 Let's say you have the following tables:
@@ -151,6 +151,88 @@ WHERE position.servertime > TIMESTAMP '2025-05-27 13:07:30' and
 ```
 
 In the above query, we are able to see the license plates for each position data record.
+
+There are two common JOINs used in PostgreSQL:
+- `LEFT JOIN` - joins two tables with all the rows from the left table being returned and matched to the right and null values for unmatched rows on the right table.
+  The full name for this type of JOIN is `LEFT OUTER JOIN` but the `` is optional and usually left out. If you do NOT need to see null values from the right table,
+  consider using a plain `INNER JOIN` to be discussed below.
+- `INNER JOIN` - joins two tables with all the rows from the left table being returned and matched to the right and unmatched rows on the right table are omitted from the query.
+  This is more efficient when you only need rows matching those on the right. It is commonly written as `JOIN` but adding the `INNER` keyword makes it more readable.
+
+### Window Functions & CTEs
+### Window Functions
+Window functions provide the capability to execute calculations across a set of rows that are related to the current row or row in the query.
+This avoids the need to group the rows to accomplish the same. Some examples are:
+- SUM() - sums up the row indicated
+- AVE() - averages the row indicated
+- Ranking functions:
+  - ROW_NUMBER() - provides a unique rank even when ties are present. Might not be ideal when rows have ties.
+  - RANK() - provides a rank and gives a tie if rows have same value.
+  - DENSE_RANK() - similar to RANK() but skips ranks when there are ties eg. `1,2,2,4`.
+
+### Common Table Expressions
+A Common Table Expression is a feature in SQL databases to temporarily store a sub-query and use the result in the main `SELECT` query.
+This allows you to avoid complex or nested sub-queries. It also makes the queries easier to read and understand. An example is as follows:
+
+```sql
+-- Using CTE and Window Functions
+-- WITH is CTE
+-- ROW_NUMBER(), RANK(), or DENSE_RANK() are window functions
+-- OVER and PARTITION assist the window functions determine how data will be compartmentalized or split
+WITH all_subject_scores AS (
+  SELECT ss.student_id,
+         ss.subject_id,
+         ss.score,
+         ROW_NUMBER() OVER (PARTITION BY ss.subject_id ORDER BY ss.score DESC) AS rank
+  FROM student_subject AS ss
+)
+SELECT student.name AS student_name,
+       school.name AS school_name,
+       county.name AS county_name,
+       subject.name AS subject_name,
+       all_ss.score AS top_score
+FROM all_subject_scores AS all_ss
+JOIN subject AS subject ON subject.id = all_ss.subject_id
+JOIN student ON all_ss.student_id = student.id
+JOIN school  ON student.school_id = school.id
+JOIN county ON county.id = school.county_id
+WHERE all_ss.rank = 1;
+```
+
+Let us breakdown the SQL into 2 components:
+- The CTE component that is written using the `WITH` keyword i.e.:
+  ```sql
+  WITH all_subject_scores AS (
+  SELECT ss.student_id,
+         ss.subject_id,
+         ss.score,
+         ROW_NUMBER() OVER (PARTITION BY ss.subject_id ORDER BY ss.score DESC) AS rank
+  FROM student_subject AS ss
+  )
+  ```
+  This CTE does the following:
+  - It captures all the scores
+  - It computes a rank for all these scores. Two things to note here:
+    - It uses the ROW_NUMBER() windowing function. You can swap this out for other window functions.
+    - It partitions the ranking based on the subject_id since we want the top scorer for each subject (bearing a unique subject id)
+- The main `SELECT` component that is written similar to other SELECT queries i.e:
+  ```sql
+  SELECT student.name AS student_name,
+         school.name AS school_name,
+         county.name AS county_name,
+         subject.name AS subject_name,
+         all_ss.score AS top_score
+  FROM all_subject_scores AS all_ss
+  JOIN subject AS subject ON subject.id = all_ss.subject_id
+  JOIN student ON all_ss.student_id = student.id
+  JOIN school  ON student.school_id = school.id
+  JOIN county ON county.id = school.county_id
+  WHERE all_ss.rank = 1;
+  ```
+  This query does the following:
+  - Lists out the columns to be fetched e.g. student name, school, county, etc
+  - JOINs the results from the CTE with the other tables.
+  - Limits the results of the CTE to only the top most ranked row.
 
 ## TBD - Securing PostgreSQL Databases
 ### Roles vs Users
