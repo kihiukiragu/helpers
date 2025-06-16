@@ -1,6 +1,6 @@
 # Installing & Configuring OpenOlat
 
-## Install JDK
+## Install JDK or JRE
 ```shell
 sudo apt install openjdk-17-jdk
 ```
@@ -69,15 +69,35 @@ CATALINA_OPTS=" \
 ### server.xml
 
 ```
-echo "<?xml version='1.0' encoding='utf-8'?>
+cat << 'EOF' > ~/conf/server.xml
+<?xml version='1.0' encoding='utf-8'?>
 <Server port="8085" shutdown="SHUTDOWN">
   <Service name="Catalina">
-    <Connector port="8088" protocol="HTTP/1.1" />
+    <Connector port="8088" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               URIEncoding="UTF-8"
+               scheme="https"
+               proxyName="training.pontypriddholdings.com"
+               proxyPort="443"
+               relaxedPathChars="[]|{}^&#x5c;"
+               relaxedQueryChars="[]|{}^&#x5c;" />
     <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost"  appBase="webapps" />
+        <Host name="localhost"  appBase="webapps"
+              unpackWARs="true" autoDeploy="true">
+
+            <Valve className="org.apache.catalina.valves.RemoteIpValve"
+                internalProxies="127\.0\.0\.1"
+                remoteIpHeader="x-forwarded-for"
+                proxiesHeader="x-forwarded-by"
+                protocolHeader="x-forwarded-proto"
+                protocolHeaderHttpsValue="https"
+                portHeader="x-forwarded-port"/>
+        </Host>
     </Engine>
   </Service>
-</Server>" > ~/conf/server.xml
+</Server>
+EOF
 ```
 
 ### Set ENV variables
@@ -234,4 +254,23 @@ cat << 'EOF' > ~/lib/log4j2.xml
    </Loggers>
 </Configuration>
 EOF
+```
+
+## Generate SSL Certs & Nginx Configuration
+
+```shell
+certbot --nginx certonly -d training.pontypriddholdings.com
+```
+
+Nginx `location /` block configuration should look like:
+```
+...
+    location / {
+        proxy_pass http://localhost:8088/; # Replace 8080 with OpenOlat's Tomcat port if different
+        # Add this for debugging:
+        add_header X-Debug-Host $host;
+        add_header X-Debug-Proto $scheme;
+        add_header X-Debug-For $proxy_add_x_forwarded_for;
+    }
+...
 ```

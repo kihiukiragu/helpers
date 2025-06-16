@@ -19,10 +19,10 @@ unzip limesurvey6.10.2+250127.zip
 
 ## Create PostgreSQL User for LimeSurvey
 
+Create a user then create a database with the owner being the user `limesurv`:
 ```
-CREATE DATABASE limesurv;
 CREATE USER limesurv WITH ENCRYPTED PASSWORD 'the-password-goes-here';
-GRANT ALL PRIVILEGES ON DATABASE limesurv TO limesurv;
+CREATE DATABASE limesurv WITH OWNER limesurv;
 ```
 
 ## File Permissions
