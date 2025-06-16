@@ -3,7 +3,7 @@
 
 ## Pre-requisites
 ```
-sudo apt install php php-fpm php-pdo php-pgsql php-mbstring
+sudo apt install php php-fpm php-pdo php-pgsql php-mbstring php-ldap php-intl php-zip php-gd php-imap php-xml
 ```
 
 ## Download Lime Survey
@@ -15,11 +15,6 @@ wget -c https://download.limesurvey.org/latest-master/limesurvey6.10.2+250127.zi
 ## Create limesurvey web folder
 ```
 unzip limesurvey6.10.2+250127.zip 
-```
-
-## Install Optional Dependencies
-```
-apt install php-ldap php-intl php-zip php-gd php-imap
 ```
 
 ## Create PostgreSQL User for LimeSurvey
