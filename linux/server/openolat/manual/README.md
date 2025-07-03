@@ -37,8 +37,9 @@ Explanation:
     - Correct choices are the first 4 choices indicated by the corresponding `1`.
     - Wrong choices are the last two indicated by the corresponding `0`.
 
-## Creating a Course
-
+## Creating a Course/Test
+- Authoring
+- Create a Course or Test (if just a test from Question Bank)
 
 ## Editing an Existing Test
 - To access Course level settings for a Test:
@@ -48,7 +49,7 @@ Explanation:
   - Ensure the:
     - `Usage` is set to a `Standalone`.
     - `Access for participants` is set to `Private Member management by administration`.
-- To access or change top-level settings for a test e.g.
+- Select `Options` tab to access or change top-level settings for a test e.g.
   - Attempts
   - Showing results
   - Showing answers
@@ -60,7 +61,7 @@ Explanation:
   - Navigate to the `Options tab`
   - Make the changes
   - Save
-- To indicate questions that will feature in the test
+- To indicate questions that will feature in the test i.e. edit content of the test, select `Edit Content`:
   - Ensure it has a `Section` part. If it has one, click on `+Add Elements` menu, select `Test Part`. 
   - If it has a `Section` but no questions, also click on `+Add Elements` and select `Import questions from pool` (It's recommended you create a pool of Questions in the `Question bank` section)
     - Select the questions you want to import from your `Question bank`
