@@ -4,8 +4,8 @@ You can use your home Debian PC or laptop as a server. You can use this for test
 ## (Optional) Securing SSH service
 > [!WARNING]
 > Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
-1. Secure access to your server by changing sshd configurations:
-   - Edit configuration file: `sudo vi /etc/ssh/sshd_config`
+1. Secure access to your server by adding a custom sshd configurations:
+   - Edit configuration file: `sudo vi /etc/ssh/sshd_config.d/my-ssh.conf`
      - Disable Root login: `PermitRootLogin no`
      - Disable Password Authentication: `PasswordAuthentication no`
    - OR run the following as user `root`:
@@ -15,12 +15,12 @@ You can use your home Debian PC or laptop as a server. You can use this for test
    fi
    timestamp=d$(date +"%Y%m%d").t$(date +"%H%M%S")
    cp /etc/ssh/sshd_config ~/backup/sshd_config.$timestamp.bak
-   sed -i 's/\(#P\|P\)ermitRootLogin.*$/PermitRootLogin no/g' /etc/ssh/sshd_config
-   sed -i 's/#PasswordAuthentication.*$/PasswordAuthentication no/g' /etc/ssh/sshd_config
+   sed -i 's/\(#P\|P\)ermitRootLogin.*$/PermitRootLogin no/g' /etc/ssh/sshd_config.d/my-ssh.conf
+   sed -i 's/#PasswordAuthentication.*$/PasswordAuthentication no/g' /etc/ssh/sshd_config.d/my-ssh.conf
    ```
 2. Verify using:
    ```
-   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config
+   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config/my-ssh.conf
    ```
    Output should be:
    ```

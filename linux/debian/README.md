@@ -1,7 +1,7 @@
 > [!NOTE]
 > The content and links in this guide will periodically become outdated. Let me know when that happens! If you're willing to help, create a fix and create a pull request
 
-# Debian 12.X (Bookworm) Installation Guide
+# Debian 13.X (Trixie) Installation Guide
 Why Debian GNU/Linux? Debian might be right for you if you:
 - Like stability in an Operating System.
 - Do NOT care for the very latest Linux tools and applications until they are thoroughly tested.
@@ -16,7 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.8.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.11.0-amd64-DVD-1.iso
 ```
 
 ### Installation
