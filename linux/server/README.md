@@ -8,15 +8,19 @@ You can use your home Debian PC or laptop as a server. You can use this for test
    - Edit configuration file: `sudo vi /etc/ssh/sshd_config.d/my-ssh.conf`
      - Disable Root login: `PermitRootLogin no`
      - Disable Password Authentication: `PasswordAuthentication no`
-   - OR run the following as user `root`:
+   - OR run the following:
    ```
-   if [ ! -d ~/backup ]; then
-    mkdir ~/backup
-   fi
-   timestamp=d$(date +"%Y%m%d").t$(date +"%H%M%S")
-   cp /etc/ssh/sshd_config ~/backup/sshd_config.$timestamp.bak
-   sed -i 's/\(#P\|P\)ermitRootLogin.*$/PermitRootLogin no/g' /etc/ssh/sshd_config.d/my-ssh.conf
-   sed -i 's/#PasswordAuthentication.*$/PasswordAuthentication no/g' /etc/ssh/sshd_config.d/my-ssh.conf
+   sudo zsh -c 'cat << "EOF" > /etc/ssh/sshd_config.d/my-ssh.conf
+   PermitRootLogin no
+   PasswordAuthentication no
+   EOF'
+   ```
+   OR
+   ```
+   sudo bash -c 'cat << "EOF" > /etc/ssh/sshd_config.d/my-ssh.conf
+   PermitRootLogin no
+   PasswordAuthentication no
+   EOF'
    ```
 2. Verify using:
    ```
