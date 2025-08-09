@@ -123,8 +123,8 @@ Your Debian installation needs to be configured to pull and apply updates in the
       deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
 
       # Only add the backports if they already exist
-      deb http://deb.debian.org/debian bookworm-backports main
-      deb-src http://deb.debian.org/debian bookworm-backports main
+      deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
       ```
    4. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
       ```
