@@ -16,6 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
+# This is still the Bookworm DVD image, but it will be updated soon
 wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.11.0-amd64-DVD-1.iso
 ```
 
