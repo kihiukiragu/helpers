@@ -4,27 +4,27 @@ You can use your home Debian PC or laptop as a server. You can use this for test
 ## (Optional) Securing SSH service
 > [!WARNING]
 > Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
-1. Secure access to your server by adding a custom sshd configurations:
-   - Edit configuration file: `sudo vi /etc/ssh/sshd_config.d/my-ssh.conf`
+1. Secure access to your server by adding a custom sshd configurations (NB: Avoid editing `/etc/ssh/sshd_config` as that gets overwritten during system updates):
+   - Edit configuration file: `sudo vi /etc/ssh/sshd_config.d/custom-sshd.conf`
      - Disable Root login: `PermitRootLogin no`
      - Disable Password Authentication: `PasswordAuthentication no`
    - OR run the following:
    ```
-   sudo zsh -c 'cat << "EOF" > /etc/ssh/sshd_config.d/my-ssh.conf
+   sudo zsh -c 'cat << "EOF" > /etc/ssh/sshd_config.d/custom-sshd.conf
    PermitRootLogin no
    PasswordAuthentication no
    EOF'
    ```
    OR
    ```
-   sudo bash -c 'cat << "EOF" > /etc/ssh/sshd_config.d/my-ssh.conf
+   sudo bash -c 'cat << "EOF" > /etc/ssh/sshd_config.d/custom-sshd.conf
    PermitRootLogin no
    PasswordAuthentication no
    EOF'
    ```
 2. Verify using:
    ```
-   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config/my-ssh.conf
+   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config/custom-sshd.conf
    ```
    Output should be:
    ```

@@ -16,8 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-# This is still the Bookworm DVD image, but it will be updated soon
-wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.11.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-13.0.0-amd64-DVD-1.iso
 ```
 
 ### Installation
@@ -111,7 +110,7 @@ Your Debian installation needs to be configured to pull and apply updates in the
       ```
       sudo vi /etc/apt/sources.list
       ```
-   3. Before editing, your `/etc/apt/sources.list` will look as follows:
+   3. NB: Before editing, your `/etc/apt/sources.list` will look as follows:
       ```
       deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
       deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
@@ -126,7 +125,11 @@ Your Debian installation needs to be configured to pull and apply updates in the
       deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
       deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
       ```
-   4. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
+   4. You could use the following sed statement to update the sources.list file (NB: Add the `-i` flag when ready to commit. This might also need to be tweaked if you have backports):
+      ```shell
+      sed 's/bookworm/trixie/' /etc/apt/sources.list
+      ```
+   5. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
       ```
       deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
       deb-src http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
