@@ -1,7 +1,7 @@
 > [!NOTE]
 > The content and links in this guide will periodically become outdated. Let me know when that happens! If you're willing to help, create a fix and create a pull request
 
-# Debian 12.X (Bookworm) Installation Guide
+# Debian 13.X (Trixie) Installation Guide
 Why Debian GNU/Linux? Debian might be right for you if you:
 - Like stability in an Operating System.
 - Do NOT care for the very latest Linux tools and applications until they are thoroughly tested.
@@ -16,7 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-12.8.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-13.0.0-amd64-DVD-1.iso
 ```
 
 ### Installation
@@ -110,7 +110,7 @@ Your Debian installation needs to be configured to pull and apply updates in the
       ```
       sudo vi /etc/apt/sources.list
       ```
-   3. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
+   3. NB: Before editing, your `/etc/apt/sources.list` will look as follows:
       ```
       deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
       deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
@@ -122,8 +122,27 @@ Your Debian installation needs to be configured to pull and apply updates in the
       deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
 
       # Only add the backports if they already exist
-      deb http://deb.debian.org/debian bookworm-backports main
-      deb-src http://deb.debian.org/debian bookworm-backports main
+      deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+      ```
+   4. You could use the following sed statement to update the sources.list file (NB: Add the `-i` flag when ready to commit. This might also need to be tweaked if you have backports):
+      ```shell
+      sed 's/bookworm/trixie/' /etc/apt/sources.list
+      ```
+   5. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
+      ```
+      deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+
+      deb http://deb.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
+
+      deb http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
+
+      # Only add the backports if they already exist
+      deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+      deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
       ```
 
 6. Update your Debian OS installation:
@@ -136,14 +155,17 @@ Your Debian installation needs to be configured to pull and apply updates in the
      sudo apt full-upgrade
      ```
 
-### Older Debian Versions e.g. Stretch and Buster
+### Older Debian Versions e.g. Stretch, Buster & Bullseye
 
-#### Update Debian 9.X Stretch OR (Upgrade Debian 7.X Jessie to Debian 8.X Stretch)
+#### Update old instance of Bullseye OR (Upgrade from Debian 10.X Buster to Debian 11.X Bullseye)
 
 ```
-deb http://archive.debian.org/debian/ stretch main contrib non-free
-deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free
-deb http://archive.debian.org/debian-security stretch/updates main contrib non-free
+deb http://archive.debian.org/debian/ buster-updates main contrib non-free
+deb-src http://archive.debian.org/debian/ buster-updates main contrib non-free
+deb http://archive.debian.org/debian buster main contrib non-free
+deb-src http://archive.debian.org/debian buster/updates main contrib non-free
+deb http://archive.debian.org/debian-security/ buster/updates main contrib non-free
+deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 ```
 
 #### Update old instance of Buster OR (Upgrade from Debian 9.X Stretch to Debian 10.X Buster)
@@ -155,6 +177,14 @@ deb http://archive.debian.org/debian buster main contrib non-free
 deb-src http://archive.debian.org/debian buster/updates main contrib non-free
 deb http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
+```
+
+#### Update Debian 9.X Stretch OR (Upgrade Debian 7.X Jessie to Debian 8.X Stretch)
+
+```
+deb http://archive.debian.org/debian/ stretch main contrib non-free
+deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free
+deb http://archive.debian.org/debian-security stretch/updates main contrib non-free
 ```
 
 ## Add New Users
@@ -245,7 +275,9 @@ Debian comes with Firefox installed, but you can add Chrome if you like.
 2. Append the sources list to include the Google Chrome repository with the following command:
 
    ```
-   echo deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main | sudo tee /etc/apt/sources.list.d/google-chrome.list
+   sudo zsh -c 'cat << "EOF" > /etc/apt/sources.list.d/google-chrome.list
+   deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main
+   EOF'
    ```
 3. Add a signing key as follows:
    ```

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <languages>
+    <language>en</language>
+  </languages>
+  <questions>
+    <question>
+      <qid>1</qid>
+      <type>L</type>
+      <title>Q1</title>
+      <question>What is the main objective of the Data Protection Act in Kenya?</question>
+      <help>The Data Protection Act in Kenya aims to protect personal data.</help>
+      <answers>
+        <answer>
+          <code>A1</code>
+          <answer>To regulate the processing of personal data</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A2</code>
+          <answer>To promote data sharing among organizations</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A3</code>
+          <answer>To impose penalties on data breaches</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A4</code>
+          <answer>To establish a data protection authority</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+      </answers>
+    </question>
+    <question>
+      <qid>2</qid>
+      <type>L</type>
+      <title>Q2</title>
+      <question>Who is responsible for ensuring compliance with the Data Protection Act in Kenya?</question>
+      <help>The Data Protection Act in Kenya outlines roles and responsibilities.</help>
+      <answers>
+        <answer>
+          <code>A1</code>
+          <answer>Data Controller</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A2</code>
+          <answer>Data Processor</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A3</code>
+          <answer>Data Subject</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A4</code>
+          <answer>Office of the Data Protection Commissioner</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+      </answers>
+    </question>
+    <question>
+      <qid>3</qid>
+      <type>L</type>
+      <title>Q3</title>
+      <question>What is personal data under the Data Protection Act in Kenya?</question>
+      <help>Personal data is defined under the Act.</help>
+      <answers>
+        <answer>
+          <code>A1</code>
+          <answer>Any information relating to an identified or identifiable natural person</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A2</code>
+          <answer>Only sensitive personal data such as health records</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A3</code>
+          <answer>Only financial information</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+        <answer>
+          <code>A4</code>
+          <answer>Any information that is publicly available</answer>
+          <assessment_value>0</assessment_value>
+        </answer>
+      </answers>
+    </question>
+    <question>
+      <qid>4</qid>
+      <type>M</type>
+      <title>Q4</title>
+      <question>What are the principles of data processing under the Data Protection Act in Kenya?</question>
+      <help>The Act outlines principles for data processing.</help>
+      <answers>
+        <answer>
+          <code>A1</code>
+          <answer>Lawfulness, fairness, and transparency</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A2</code>
+          <answer>Purpose limitation</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A3</code>
+          <answer>Data minimization</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A4</code>
+          <answer>Accuracy and up-to-date</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A5</code>
+          <answer>Storage limitation</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+          <code>A6</code>
+          <answer>Integrity and confidentiality</answer>
+          <assessment_value>1</assessment_value>
+        </answer>
+        <answer>
+              <code>A7</code>
+              <answer>Accountability</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A8</code>
+              <answer>None of the above</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+          </answers>
+        </question>
+        <question>
+          <qid>5</qid>
+          <type>M</type>
+          <title>Q5</title>
+          <question>What rights do data subjects have under the Data Protection Act in Kenya?</question>
+          <help>Data subjects have various rights.</help>
+          <answers>
+            <answer>
+              <code>A1</code>
+              <answer>Right to access their personal data</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A2</code>
+              <answer>Right to rectification of their personal data</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A3</code>
+              <answer>Right to erasure of their personal data</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A4</code>
+              <answer>Right to object to processing of their personal data</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A5</code>
+              <answer>Right to data portability</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A6</code>
+              <answer>None of the above</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+          </answers>
+        </question>
+        <question>
+          <qid>6</qid>
+          <type>L</type>
+          <title>Q6</title>
+          <question>What is the role of the Office of the Data Protection Commissioner in Kenya?</question>
+          <help>The ODPC is established under the Act.</help>
+          <answers>
+            <answer>
+              <code>A1</code>
+              <answer>To oversee and enforce the Data Protection Act</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A2</code>
+              <answer>To process personal data on behalf of data controllers</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+            <answer>
+              <code>A3</code>
+              <answer>To provide data protection training</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+            <answer>
+              <code>A4</code>
+              <answer>To conduct data protection audits</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+          </answers>
+        </question>
+        <question>
+          <qid>7</qid>
+          <type>L</type>
+          <title>Q7</title>
+          <question>What constitutes a data breach under the Data Protection Act in Kenya?</question>
+          <help>A data breach is defined under the Act.</help>
+          <answers>
+            <answer>
+              <code>A1</code>
+              <answer>A breach of security leading to unauthorized access to personal data</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A2</code>
+              <answer>A breach of contract between a data controller and data processor</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+            <answer>
+              <code>A3</code>
+              <answer>A failure to respond to a data subject's request</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+            <answer>
+              <code>A4</code>
+              <answer>A loss of personal data due to natural disaster</answer>
+              <assessment_value>0</assessment_value>
+            </answer>
+          </answers>
+        </question>
+        <question>
+          <qid>8</qid>
+          <type>L</type>
+          <title>Q8</title>
+          <question>What are the consequences of non-compliance with the Data Protection Act in Kenya?</question>
+          <help>Non-compliance can result in penalties.</help>
+          <answers>
+            <answer>
+              <code>A1</code>
+              <answer>Administrative fines</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+              <code>A2</code>
+              <answer>Criminal penalties</answer>
+              <assessment_value>1</assessment_value>
+            </answer>
+            <answer>
+                      <code>A3</code>
+                      <answer>Civil liability</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A4</code>
+                      <answer>No consequences</answer>
+                      <assessment_value>0</assessment_value>
+                    </answer>
+                  </answers>
+                </question>
+                <question>
+                  <qid>9</qid>
+                  <type>M</type>
+                  <title>Q9</title>
+                  <question>How can data controllers ensure compliance with the Data Protection Act in Kenya?</question>
+                  <help>Data controllers must take steps to comply.</help>
+                  <answers>
+                    <answer>
+                      <code>A1</code>
+                      <answer>Implement data protection policies and procedures</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A2</code>
+                      <answer>Conduct data protection impact assessments</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A3</code>
+                      <answer>Appoint a Data Protection Officer</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A4</code>
+                      <answer>Provide data protection training to employees</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A5</code>
+                      <answer>None of the above</answer>
+                      <assessment_value>0</assessment_value>
+                    </answer>
+                  </answers>
+                </question>
+                <question>
+                  <qid>10</qid>
+                  <type>M</type>
+                  <title>Q10</title>
+                  <question>Why is data protection important in Kenya?</question>
+                  <help>Data protection is crucial for various reasons.</help>
+                  <answers>
+                    <answer>
+                      <code>A1</code>
+                      <answer>To protect individuals' personal data</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A2</code>
+                      <answer>To promote trust in digital services</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A3</code>
+                      <answer>To support economic growth</answer>
+                      <assessment_value>1</assessment_value>
+                    </answer>
+                    <answer>
+                      <code>A4</code>
+                      <answer>None of the above</answer>
+                      <assessment_value>0</assessment_value>
+                    </answer>
+                  </answers>
+                </question>
+              </questions>
+            </document>

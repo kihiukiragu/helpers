@@ -405,3 +405,21 @@ Steps:
 - Connect to the server. You will be prompted to enter 2 passwords:
   - SSH Identity file password - if your ssh key contains a passphrase/password, enter it here
   - Connection password - the postgres password associated with your username on the remote server. Obtain this from the DBA.
+
+
+## TimescaleDB
+Add repo:
+```
+curl -s https://packagecloud.io/install/repositories/timescale/timescaledb/script.deb.sh | sudo bash
+```
+
+Install timescale
+```
+sudo apt install timescaledb-2-postgresql-17
+```
+
+Upgrade cluster from 16 to 17:
+```
+sudo pg_dropcluster 17 main --stop
+sudo pg_upgradecluster 16 main
+```
