@@ -4,27 +4,27 @@
 # This script must be run with sudo privileges.
 #
 # Usage:
-#   sudo ./create_user.sh <username> "<ssh_key_1> <ssh_key_2> ..."
+#   sudo ./create_user.sh <username> "<ssh_key_1> <ssh_key_2> ..."
 #
 # Example:
-#   sudo ./create_user.sh jdoe "ecdsa-sha2-... pontyit@PontyIT"
+#   sudo ./create_user.sh jdoe "ecdsa-sha2-... pontyit@PontyIT"
 
 # Check if the script is run as root
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run with sudo."
-   exit 1
+   echo "This script must be run with sudo."
+   exit 1
 fi
 
 # Check if both username and SSH keys were provided as arguments
 if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Error: Please provide both a username and at least one SSH key."
-    echo "Usage: $0 <username> \"<ssh_key_1>\" \"<ssh_key_2>\" ..."
-    exit 1
+    echo "Error: Please provide both a username and at least one SSH key."
+    echo "Usage: $0 <username> \"<ssh_key_1>\" \"<ssh_key_2>\" ..."
+    exit 1
 fi
 
 USERNAME=$1
 shift # Shift to get the rest of the arguments as keys
-SSH_KEYS=("$@") # Assign all remaining arguments to an array
+export SSH_KEYS=("$@") # Export the array as an environment variable
 PASSWORD="${USERNAME}4321"
 
 # --- USER CREATION AND PASSWORD SETUP ---
@@ -40,20 +40,19 @@ usermod -aG sudo "$USERNAME"
 
 # --- SSH SETUP ---
 echo "4. Setting up SSH keys for '$USERNAME'..."
-sudo -u "$USERNAME" bash << EOF_SSH
-# Create the .ssh directory if it doesn't exist.
-mkdir -p ~/.ssh
-# Set restrictive permissions on the .ssh directory.
-chmod 700 ~/.ssh
+
+# Create the .ssh directory and set permissions as the new user.
+sudo -u "$USERNAME" mkdir -p /home/"$USERNAME"/.ssh
+sudo -u "$USERNAME" chmod 700 /home/"$USERNAME"/.ssh
 
 # Use a loop to process each key and add it to the file.
-for key in "\${SSH_KEYS[@]}"; do
-    printf "%s\n" "$key" >> ~/.ssh/authorized_keys
+for key in "${SSH_KEYS[@]}"; do
+    # Use sudo and tee to write the key to the file with the correct permissions.
+    echo "$key" | sudo -u "$USERNAME" tee -a /home/"$USERNAME"/.ssh/authorized_keys > /dev/null
 done
 
 # Set restrictive permissions on the authorized_keys file.
-chmod 600 ~/.ssh/authorized_keys
-EOF_SSH
+sudo -u "$USERNAME" chmod 600 /home/"$USERNAME"/.ssh/authorized_keys
 
 echo "User '$USERNAME' created successfully."
 echo "Default password: '$PASSWORD'."
