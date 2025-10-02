@@ -259,7 +259,8 @@ EOF
 ## Generate SSL Certs & Nginx Configuration
 
 ```shell
-certbot --nginx certonly -d training.pontypriddholdings.com
+sudo apt install python3-certbot-nginx
+sudo certbot --nginx certonly -d training.pontypriddholdings.com
 ```
 
 Nginx `location /` block configuration should look like:
