@@ -24,7 +24,7 @@ You can use your home Debian PC or laptop as a server. You can use this for test
    ```
 2. Verify using:
    ```
-   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config/custom-sshd.conf
+   grep -E '^PermitRootLogin|^PasswordAuthentication' /etc/ssh/sshd_config.d/custom-sshd.conf
    ```
    Output should be:
    ```
