@@ -15,7 +15,7 @@ Download an ISO containing the last version of Fedora which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://fedoraproject.org/workstation/download and download the `.iso` file.
 ```
-wget -c https://download.fedoraproject.org/pub/fedora/linux/releases/41/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-41-1.4.iso 
+wget -c https://download.fedoraproject.org/pub/fedora/linux/releases/44/Workstation/x86_64/iso/Fedora-Workstation-Live-44-1.7.x86_64.iso
 ```
 
 ## Install Google Chrome

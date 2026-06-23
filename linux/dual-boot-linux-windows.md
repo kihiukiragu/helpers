@@ -19,10 +19,10 @@ You might want to have Linux and Windows on the same PC. Follow this guide to ma
   - Click on install and accept to formatting "The device will be formatted and all the data will be lost. Continue?".
   - Close all open Windows after installation process is complete.
 - Downloading Debian/Linux:
-  - Use the [Debian 12.X (Bookworm) Installation Guide #Download](debian/README.md#download-debian) just to download the ISO file.
+  - Use the [Debian 13.X (Bookworm) Installation Guide #Download](debian/README.md#download-debian) just to download the ISO file.
   - Go to `My Computer` and copy and paste the downloaded ISO file to the USB flash.
 - IMPORTANT: See Windows & Partitioning section below to reserve/dedicate space on your PC hard-drive for Linux installation.
-- Once you have space reserved, resume to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- Once you have space reserved, resume to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ### Windows & Partitioning & Shrinking and Reclaiming Space
 #### Windows Already Installed and Occupies All Available space
@@ -33,7 +33,7 @@ If Windows was installed and all the partition space taken, you can:
   - In the 3rd field ("Enter the amount of space to shrink"), enter an amount larger than 30000 (ie ~30 GB) but not larger than 50,000 unless you have the space that is.
   - Click on `Shrink`. This will create space that will be used during Debian / Fedora Linux installation.
 - CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not accidentally install over the existing Windows installation.
-- Return to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- Return to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 #### Windows does NOT Exist - Install Windows First
 Windows OS requires primary partition on a PC to be formatted to NTFS format. For this reason, Windows has to go first!
@@ -54,7 +54,7 @@ Steps:
 - Restart the PC and then install the Linux Distro of your choice.
 
 - CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not overriding the Windows partition and therefore getting rid of Windows!
-- Return to the [Debian 12.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- Return to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ## Linux Users - UEFI Bootable USB using Ventoy
 > [!NOTE]
