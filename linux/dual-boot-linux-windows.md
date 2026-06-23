@@ -31,9 +31,85 @@ If Windows was installed and all the partition space taken, you can:
   - Start menu, run `Disk Management` or `partition manage` (Run as administrator).
   - Right click on `C:` drive (or any other hard-drive if one exists) and select `Shrink Volume`.
   - In the 3rd field ("Enter the amount of space to shrink"), enter an amount larger than 30000 (ie ~30 GB) but not larger than 50,000 unless you have the space that is.
+  - This leaves a block of unallocated space labeled "Free Space" or "Unallocated". Leave it exactly like that—do not format it or assign a drive letter.
   - Click on `Shrink`. This will create space that will be used during Debian / Fedora Linux installation.
 - CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not accidentally install over the existing Windows installation.
+  - Choose the Right Method: Select Guided - use the largest continuous free space. This tells the installer to only look at the blank 50GB space you created in Step 1.
+  - Review the Partition Map: * Your existing Windows partitions will usually be labeled as ntfs or fat32.
+    - Ensure there is no formatting flag (like a lowercase f or a "Format" checkmark) next to any of your Windows ntfs partitions.
+    - Look for the new Linux partitions (usually ext4 assigned to / and a small swap partition). These should have the formatting flag.
+    ```shell
+    This is an overview of your currently configured partitions and mount points. Select a partition to modify its settings (file system, mount point, etc.), or invoke "Guided partitioning" to start over.
+
+      Guided partitioning
+      Configure software RAID
+      Configure the Logical Volume Manager
+      Configure encrypted volumes
+      Configure iSCSI volumes
+
+      LVM VG ventoy, LV ventoy - 4.0 GB Linux device-mapper (linear)
+      ▼ SCSI1 (0,0,0) (sda) - 256.1 GB ATA MTFDDAV256MBF-1A
+        >      #1  primary    52.4 MB   B      ntfs
+        >      #2  primary   202.9 GB          ntfs
+        >      #5  logical    49.7 GB   f      ext4           /
+        >      #6  logical     2.7 GB   f      swap           swap
+        >      #3  primary   633.3 MB          ntfs
+      ▼ SCSI7 (0,0,0) (sdb) - 31.0 GB USB DISK 3.0
+        >               1.0 MB          FREE SPACE
+        >      #1       31.0 GB                        Ventoy
+        >      #2       33.6 MB         fat16          VTOYEFI
+        >               3.6 kB          FREE SPACE
+
+      Undo changes to partitions
+      Finish partitioning and write changes to disk
+    ```
+  - The Final Confirmation Check (for partitioning) Before any changes are actually written to your drive, the installer will throw a final confirmation screen summary. Always pause here and read carefully:
+    - The Rule: The summary must only state that it is formatting the new Linux partitions (e.g., partition #5 as ext4 and partition #6 as swap).
+    - The Red Flag: If you see any mention of formatting an ntfs partition, or if a partition matching the size of your Windows drive (e.g., ~200GB) is listed under "going to be formatted", DO NOT PROCEED. Cancel or turn off the machine.
+    - NB: If only the Linux partitions are listed to be formatted, select Yes to write changes to disk. GRUB will safely install alongside Windows, allowing you to choose your OS at every boot.
+    ```shell
+    Partition disks
+
+    If you continue, the changes listed below will be written to the disks. Otherwise, you will be able to make further changes manually.
+
+    The partition tables of the following devices are changed:
+       SCSI1 (0,0,0) (sda)
+
+    The following partitions are going to be formatted:
+       partition #5 of SCSI1 (0,0,0) (sda) as ext4
+       partition #6 of SCSI1 (0,0,0) (sda) as swap
+
+    Write the changes to disks?
+
+      ( ) No
+      (*) Yes
+    ```
 - Return to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- You might encounter a GRUB Boot loader installation question as follows:
+  ```shell
+  Install the GRUB boot loader
+
+  The following other operating systems have been detected on this computer: Windows Vista
+
+  If all of your operating systems are listed above, then it should be safe to install the boot loader to your primary drive (UEFI partition/boot record). When your computer boots, you will be able to choose to load one of these operating systems or the newly installed Debian system.
+
+  Install the GRUB boot loader to your primary drive?
+
+    ( ) No
+    (*) Yes
+  ```
+  And then (NOTE: make sure to select `/dev/sda` and NOT `/dev/sdb` is the removable media eg USB drive or CD/DVD:
+  ```shell
+  Install the GRUB boot loader
+
+  You need to make the newly installed system bootable, by installing the GRUB boot loader on a bootable device. The usual way to do this is to install GRUB to your primary drive (UEFI partition/boot record). You may instead install GRUB to a different drive (or partition), or to removable media.
+
+  Device for boot loader installation:
+
+    Enter device manually
+    /dev/sda (ata-MTFDDAV256MBF-1AN15ABHA_16451493F785)
+    /dev/sdb (usb-_USB_DISK_3.0_070A4864D4AF8F88-0:0)
+  ```
 
 #### Windows does NOT Exist - Install Windows First
 Windows OS requires primary partition on a PC to be formatted to NTFS format. For this reason, Windows has to go first!
