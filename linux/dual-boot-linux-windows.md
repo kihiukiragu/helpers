@@ -19,10 +19,10 @@ You might want to have Linux and Windows on the same PC. Follow this guide to ma
   - Click on install and accept to formatting "The device will be formatted and all the data will be lost. Continue?".
   - Close all open Windows after installation process is complete.
 - Downloading Debian/Linux:
-  - Use the [Debian 13.X (Bookworm) Installation Guide #Download](debian/README.md#download-debian) just to download the ISO file.
+  - Use the [Debian 13.X (Trixie) Installation Guide #Download](debian/README.md#download-debian) just to download the ISO file.
   - Go to `My Computer` and copy and paste the downloaded ISO file to the USB flash.
 - IMPORTANT: See Windows & Partitioning section below to reserve/dedicate space on your PC hard-drive for Linux installation.
-- Once you have space reserved, resume to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- Once you have space reserved, resume to the [Debian 13.X (Trixie) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ### Windows & Partitioning & Shrinking and Reclaiming Space
 #### Windows Already Installed and Occupies All Available space
@@ -84,7 +84,7 @@ If Windows was installed and all the partition space taken, you can:
       ( ) No
       (*) Yes
     ```
-- Return to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- Return to the [Debian 13.X (Trixie) Installation Guide](debian/README.md) and start the Debian/Linux process.
 - You might encounter a GRUB Boot loader installation question as follows:
   ```shell
   Install the GRUB boot loader
@@ -98,7 +98,7 @@ If Windows was installed and all the partition space taken, you can:
     ( ) No
     (*) Yes
   ```
-  And then (NOTE: make sure to select `/dev/sda` and NOT `/dev/sdb` is the removable media eg USB drive or CD/DVD:
+  And then (NOTE: make sure to select `/dev/sda` and NOT `/dev/sdb`, which is the removable media eg USB drive or CD/DVD):
   ```shell
   Install the GRUB boot loader
 
@@ -129,8 +129,8 @@ Steps:
 - Once finished, you can either boot into Windows to ensure it installed ok.
 - Restart the PC and then install the Linux Distro of your choice.
 
-- CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not overriding the Windows partition and therefore getting rid of Windows!
-- Return to the [Debian 13.X (Bookworm) Installation Guide](debian/README.md) and start the Debian/Linux process.
+- CAUTION: Next you can proceed to Linux installation. However, pay close attention during Linux installation so you only use the space that you shrunk in the previous steps and do not override the Windows partition and therefore getting rid of Windows!
+- Return to the [Debian 13.X (Trixie) Installation Guide](debian/README.md) and start the Debian/Linux process.
 
 ## Linux Users - UEFI Bootable USB using Ventoy
 > [!NOTE]

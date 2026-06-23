@@ -1,12 +1,12 @@
 > [!WARNING]
-> This Fedora 41 Workstation installation guide is a very rough draft and incomplete. This banner will be removed once it's stable.
+> This Fedora 44 Workstation installation guide is a very rough draft and incomplete. This banner will be removed once it's stable.
 
-# Fedora 41 Workstation Installation Guide
+# Fedora 44 Workstation Installation Guide
 Why Fedora Linux? Fedora might be right for you if you:
 - Like to test out newer cutting edge open source applications and stability is not a critical factor.
 - Have a new PC and some of your hardware does not work well with stable distros eg Debian or CentOS.
 
-## Download Debian
+## Download Fedora
 
 Download an ISO containing the last version of Fedora which also bundles non-free firmware from this link: https://fedoraproject.org/workstation/download (download the .iso file that suits your processor. For most folks, that will be AMD x86_64 systems):
 
