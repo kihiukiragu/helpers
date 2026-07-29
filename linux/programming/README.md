@@ -31,7 +31,7 @@
 ## Install node:
 1. Install nvm:
 ```
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.4/install.sh | bash 
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.6/install.sh | bash 
 ```
 2. If using zsh, edit .zshrc and add:
 ```
