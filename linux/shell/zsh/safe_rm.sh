@@ -1,10 +1,25 @@
-# Add the following in ~/.zshrc (preferably at the bottom)
+# Add the following in ~/.zshenv (NOT ~/.zshrc) — .zshenv is sourced by
+# every zsh invocation (interactive or not, login or not), while .zshrc is
+# only read for interactive shells. Defining this only in .zshrc leaves the
+# `rm` alias active in non-interactive shells (inherited PATH/aliases) with
+# no `_safe_rm` function backing it, causing "command not found: _safe_rm".
+#
 # Define a function to safely delete files and directories
 _safe_rm() {
   # Check if any arguments were provided
   if [[ -z "$@" ]]; then
     # If no arguments, just call the original rm (which usually prints usage)
     command rm
+    return
+  fi
+
+  # The confirmation prompt below blocks on `read`, which has no one to
+  # answer it when stdin isn't a real terminal — scripts, CI, and
+  # tool/agent-driven shells all hang forever instead of failing or
+  # deleting. In those cases there's no interactive user to protect, so
+  # just run the real rm.
+  if [[ ! -t 0 ]]; then
+    command rm "$@"
     return
   fi
 
