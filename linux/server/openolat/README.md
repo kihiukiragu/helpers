@@ -411,7 +411,7 @@ Fill-in questions are `fib*.xml` items. The question body is one paragraph with 
 
 - Replace the `___` in the text with the `<textEntryInteraction .../>` element and delete the copy at the end of the paragraph.
 - Convert backtick pairs to `<code>...</code>` (the renderer shows it as monospace). The box can sit inside `<code>`.
-- Questions with two `___` but one input need a second interaction and `RESPONSE_2` declaration with its own mapping; leave them for manual editing.
+- Questions with two `___` but one input need a second interaction and `RESPONSE_2` declaration with its own mapping; leave them for manual editing. The simpler fix is to reword to a single blank and replace the `<correctResponse>` and `<mapping>` (done for the ssh-keygen question, now "generate an SSH ___ of public and private keys", answer `pair`). A single box that accepts either word of a two-word answer lets students pass by typing only one of them.
 
 Do not set `expectedLength` on the box: it hints at the length of the answer.
 
