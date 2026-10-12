@@ -415,6 +415,10 @@ Fill-in questions are `fib*.xml` items. The question body is one paragraph with 
 
 Do not set `expectedLength` on the box: it hints at the length of the answer.
 
+### Regex and other backslash content
+
+The original import ran question text through Markdown, which swallowed backslashes (`\d` became `d`), `*...*` pairs and `_`. Check any new import for this. In the RegEx test, 40 item files were repaired on 2026-10-12: write the backslash literally in `<p>`/`<simpleChoice>` text, wrap regex in stems in `<code>`, and set `caseSensitive="true"` on fill-in answers (`\d` vs `\D`). Do not add bare-letter alternatives (`d` for `\d`); they teach the wrong thing.
+
 ### Notes for 21.x
 
 - The guide documents Tomcat 10.1, Java 17 and PostgreSQL 18. This server runs Tomcat 11.0.8 with Java 17 and works on 21.0.5.
