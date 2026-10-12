@@ -353,3 +353,38 @@ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8088/dmz/    # 200 whe
 ### Rollback
 
 Stop Tomcat, drop and recreate `oodb`, restore the dump with `gunzip -c ~/backup/oodb.<ts>.sql.gz | psql oodb -U oodbu -h localhost`, restore `olatdata` from the tarball, and repoint `~/webapp` at the previous `openolat-NNNN` directory (old directories are kept).
+
+## REST API access
+
+The API key is created by an admin in the portal: Administration -> User management -> (user) -> Authentications -> Add API-Key. On 20.3 the UI shows a "Client ID" and "Client secret"; use them as the Basic Auth username and password (not as Bearer or OAuth):
+
+```shell
+curl -u "$CLIENT_ID:$CLIENT_SECRET" https://training.pontypriddholdings.com/restapi/users/me
+```
+
+The key only sees what its user can see. Give the user the `olatAdmin` and `author` roles (User management -> Roles) to list all tests via `/restapi/repo/entries`. Never pass the secret as the username in a test: failed logins write the username to `olat.log`.
+
+REST cannot read or edit test questions (export returns 403, no question-bank list), so bulk quiz edits are done on disk, below.
+
+## Editing quiz questions on disk
+
+Tests are QTI 2.1 packages under `~/olatdata/bcroot/repository/<olatResourceId>/_unzipped_/`. `<olatResourceId>` is the `olatResourceId` field from `/restapi/repo/entries`. Each question is a folder containing an `<type><hash>.xml` file (`mc`, `sc`, `fib`), and the test's `test<uuid>.xml` lists them in `assessmentItemRef` elements. Some folders contain more than one item file, so identify items by file or `identifier`, not folder name.
+
+Fill-in-the-blank (`fib*.xml`) answers live in `<responseDeclaration>`: one `<correctResponse><value>` (shown as the correct answer) and one `<mapEntry mapKey="..." mappedValue="10.0" caseSensitive="false"/>` per accepted answer. Add an entry per alternative; set `caseSensitive="true"` where case matters (regex `\d` vs `\D`, vi keys). Escape quotes with an attribute delimiter that does not clash (`'"x"'`).
+
+Procedure:
+
+1. Check nobody is mid-test:
+   ```shell
+   psql -h localhost -U oodbu oodb -At -c "select count(*) from o_qti_assessmenttest_session where q_finish_time is null and q_termination_time is null and lastmodified > now() - interval '3 hours'"
+   ```
+2. Stop Tomcat (see Upgrading, step 2), then back up the DB and the repository folders being edited:
+   ```shell
+   ts=d$(date +%Y%m%d).t$(date +%H%M%S)
+   pg_dump -h localhost -U oodbu oodb | gzip > ~/backup/oodb.$ts.sql.gz
+   (cd ~/olatdata/bcroot/repository && tar czf ~/backup/repo-quizzes.$ts.tgz <id1> <id2>)
+   ```
+3. Copy the folders off the server, edit, check every changed file parses (`xml.etree.ElementTree.parse`), and copy only the changed files back into the same paths.
+4. Start Tomcat, check `http://localhost:8088/dmz/` returns 200 and `olat.log` has no errors, then answer one edited question in the UI.
+
+Past results keep their stored scores. Do not remove `assessmentItemRef` lines from a test that has results: attempts that answered those questions may open incompletely. Adding accepted answers or fixing an answer is safe. Rollback: stop Tomcat and extract the tarball over `repository/`.
