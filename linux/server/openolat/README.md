@@ -17,10 +17,10 @@ sudo useradd -m -s /bin/bash openolat
 
 ```shell
 cd downloads
-wget -c https://www.openolat.com/releases/openolat_2004.war
+wget -c https://www.openolat.com/releases/openolat_20310.war
 cd
-unzip -d openolat-2004 downloads/openolat_2004.war
-ln -s openolat-2004 webapp
+unzip -q -d openolat-20310 downloads/openolat_20310.war
+ln -s openolat-20310 webapp
 ```
 
 ### Setup Tomcat in user openolat home
@@ -68,12 +68,16 @@ CATALINA_OPTS=" \
 
 ### server.xml
 
+Note: `maxPartCount="-1"` and `maxParameterCount="-1"` are required for Tomcat 10.1.42 and later (including the 11.0.8 used here); the defaults break OpenOlat.
+
 ```
 cat << 'EOF' > ~/conf/server.xml
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="8085" shutdown="SHUTDOWN">
   <Service name="Catalina">
     <Connector port="8088" protocol="HTTP/1.1"
+               maxPartCount="-1"
+               maxParameterCount="-1"
                connectionTimeout="20000"
                redirectPort="8443"
                URIEncoding="UTF-8"
@@ -155,7 +159,7 @@ PID file found but either no matching process was found or the current user does
 ## Setup Database
 
 ```sql
-CREATE user oodbu WITH password 'V2*/>O\~dd44';
+CREATE user oodbu WITH password '<db-password>';
 CREATE DATABASE oodb WITH OWNER oodbu;
 ```
 
@@ -163,6 +167,26 @@ CREATE DATABASE oodb WITH OWNER oodbu;
 ```
 psql oodb -U oodbu -h localhost
 ```
+
+### Rotate the DB password
+
+The password lives in three places: PostgreSQL, `~/conf/Catalina/localhost/ROOT.xml` (the `password` attribute of the `jdbc/openolatDS` resource) and `~/.pgpass`. Never commit it to this repo.
+
+```shell
+NEWPW=$(openssl rand -base64 24 | tr -d '/+=\n')
+sudo -u postgres psql -c "ALTER USER oodbu WITH PASSWORD '$NEWPW';"
+
+export CATALINA_BASE=~ CATALINA_HOME=~/tomcat JRE_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+~/stop
+cp ~/conf/Catalina/localhost/ROOT.xml ~/backup/ROOT.xml.bak
+sed -i "s|password=\"[^\"]*\"|password=\"$NEWPW\"|" ~/conf/Catalina/localhost/ROOT.xml
+sed -i "s|^\(localhost:5432:oodb:oodbu:\).*|\1$NEWPW|" ~/.pgpass
+~/start
+
+psql oodb -U oodbu -h localhost -c 'SELECT 1'
+```
+
+If the password contains `&`, `<` or `>` it must be XML-escaped in `ROOT.xml`; the generated one above avoids this. Check `~/logs/olat.log` and `https://training.pontypriddholdings.com/` after the restart.
 
 ### Create Schema
 
@@ -200,7 +224,7 @@ cat << 'EOF' > ~/conf/Catalina/localhost/ROOT.xml
 <Context path="" docBase="/home/openolat/webapp" debug="0" reloadable="false" allowLinking="true">
      <Resource name="jdbc/openolatDS" auth="Container" type="javax.sql.DataSource"
          maxTotal="16" maxIdle="4" maxWaitMillis="60000"
-         username="oodbu" password="oodbpasswd"
+         username="oodbu" password="<db-password>"
          driverClassName="org.postgresql.Driver"
          validationQuery="SELECT 1"
          validationQueryTimeout="-1"
@@ -275,3 +299,57 @@ Nginx `location /` block configuration should look like:
     }
 ...
 ```
+
+## Upgrading OpenOlat
+
+Upgrades can skip versions (from 15.3 onwards). Done so far: 2004 (20.0.4) -> 20310 (20.3.10) on 2026-10-12. Check https://www.openolat.com/releases/ for newer WARs and https://docs.openolat.org/manual_admin/installation/updateGuide/ for version-specific steps.
+
+The app is served at the root path (`Context path=""` in `ROOT.xml`), so REST is at `https://training.pontypriddholdings.com/restapi/`, not under `/openolat/`.
+
+### 1. Download and extract (site can stay up)
+
+```shell
+cd ~/downloads
+wget -c https://www.openolat.com/releases/openolat_NNNNN.war
+cd
+unzip -q -d openolat-NNNNN downloads/openolat_NNNNN.war
+```
+
+### 2. Stop Tomcat
+
+Over a non-interactive `ssh host 'cmd'` the env from `.zshrc` is not loaded, so `./stop` talks to the default port 8005 instead of 8085 and fails. Export the vars first:
+
+```shell
+export CATALINA_BASE=~ CATALINA_HOME=~/tomcat JRE_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+~/stop
+```
+
+Wait until the process in `~/run/openolat.pid` is gone before backing up.
+
+### 3. Backup (with Tomcat stopped)
+
+```shell
+ts=d$(date +%Y%m%d).t$(date +%H%M%S)
+pg_dump -h localhost -U oodbu oodb | gzip > ~/backup/oodb.$ts.sql.gz
+tar czf ~/backup/olatdata.$ts.tgz -C ~ olatdata
+cp ~/conf/server.xml ~/backup/server.xml.$ts.bak
+gzip -t ~/backup/oodb.$ts.sql.gz && tar tzf ~/backup/olatdata.$ts.tgz > /dev/null && echo verified
+```
+
+### 4. Switch and start
+
+```shell
+rm ~/webapp && ln -s ~/openolat-NNNNN ~/webapp
+~/start
+```
+
+The first start runs DB migrations and can take a while; do not stop Tomcat until it finishes. Watch with:
+
+```shell
+tail -f ~/logs/olat.log | grep -i upgrade
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8088/dmz/    # 200 when up
+```
+
+### Rollback
+
+Stop Tomcat, drop and recreate `oodb`, restore the dump with `gunzip -c ~/backup/oodb.<ts>.sql.gz | psql oodb -U oodbu -h localhost`, restore `olatdata` from the tarball, and repoint `~/webapp` at the previous `openolat-NNNN` directory (old directories are kept).
