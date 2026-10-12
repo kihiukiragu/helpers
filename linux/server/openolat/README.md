@@ -17,10 +17,10 @@ sudo useradd -m -s /bin/bash openolat
 
 ```shell
 cd downloads
-wget -c https://www.openolat.com/releases/openolat_20310.war
+wget -c https://www.openolat.com/releases/openolat_2105.war
 cd
-unzip -q -d openolat-20310 downloads/openolat_20310.war
-ln -s openolat-20310 webapp
+unzip -q -d openolat-2105 downloads/openolat_2105.war
+ln -s openolat-2105 webapp
 ```
 
 ### Setup Tomcat in user openolat home
@@ -302,7 +302,7 @@ Nginx `location /` block configuration should look like:
 
 ## Upgrading OpenOlat
 
-Upgrades can skip versions (from 15.3 onwards). Done so far: 2004 (20.0.4) -> 20310 (20.3.10) on 2026-10-12. Check https://www.openolat.com/releases/ for newer WARs and https://docs.openolat.org/manual_admin/installation/updateGuide/ for version-specific steps.
+Upgrades can skip versions (from 15.3 onwards). Done so far: 2004 (20.0.4) -> 20310 (20.3.10) -> 2105 (21.0.5), both on 2026-10-12. Check https://www.openolat.com/releases/ for newer WARs and https://docs.openolat.org/manual_admin/installation/updateGuide/ for version-specific steps.
 
 The app is served at the root path (`Context path=""` in `ROOT.xml`), so REST is at `https://training.pontypriddholdings.com/restapi/`, not under `/openolat/`.
 
@@ -343,7 +343,7 @@ rm ~/webapp && ln -s ~/openolat-NNNNN ~/webapp
 ~/start
 ```
 
-The first start runs DB migrations and can take a while; do not stop Tomcat until it finishes. Watch with:
+The first start runs DB migrations and can take a while (21.0.5 took about 40 seconds here); do not stop Tomcat until it finishes. Watch with:
 
 ```shell
 tail -f ~/logs/olat.log | grep -i upgrade
@@ -387,4 +387,37 @@ Procedure:
 3. Copy the folders off the server, edit, check every changed file parses (`xml.etree.ElementTree.parse`), and copy only the changed files back into the same paths.
 4. Start Tomcat, check `http://localhost:8088/dmz/` returns 200 and `olat.log` has no errors, then answer one edited question in the UI.
 
-Past results keep their stored scores. Do not remove `assessmentItemRef` lines from a test that has results: attempts that answered those questions may open incompletely. Adding accepted answers or fixing an answer is safe. Rollback: stop Tomcat and extract the tarball over `repository/`.
+Past results keep their stored scores. Adding accepted answers or fixing an answer is safe. Removing questions from a test (below) can leave old attempts that answered them showing incomplete detail, so only do it when old results are no longer needed. Rollback: stop Tomcat and extract the tarball over `repository/`.
+
+Only stop Tomcat when no student attempt is running; author-mode previews (`q_author_mode = true`) do not count:
+
+```shell
+psql -h localhost -U oodbu oodb -At -c "select count(*) from o_qti_assessmenttest_session where q_finish_time is null and q_termination_time is null and q_author_mode = false and lastmodified > now() - interval '3 hours'"
+```
+
+### Removing duplicate questions
+
+A test lists its questions as self-closing `<assessmentItemRef identifier="..." href="<folder>/<file>.xml"/>` elements. To remove duplicates, delete the extra `assessmentItemRef` tags and leave the question files on disk.
+
+- Compare the question text and the correct answers exactly (lowercase and collapse whitespace only). Do not strip punctuation: answers made only of symbols (`?????`, `*.txt`) all look identical once stripped, and a wrong copy gets kept.
+- For choice questions compare the text of the correct choice, not its identifier, which is random per copy. For fill-in questions compare the accepted answers.
+- If two copies disagree on the correct answer, keep the one that is right and remove the other.
+- The test also stores a fixed `MAXSCORE` (the sum of all question points). Lower it by the points of the removed questions, in the `<outcomeDeclaration identifier="MAXSCORE">` default value of the test file. The per-attempt pick count (`<selection select="N"/>`) is unchanged.
+- Afterwards re-run the duplicate check and confirm it finds none.
+
+### Fill-in-the-blank layout
+
+Fill-in questions are `fib*.xml` items. The question body is one paragraph with a single `<textEntryInteraction responseIdentifier="RESPONSE_1"/>`. To get an inline box instead of a typed `___`:
+
+- Replace the `___` in the text with the `<textEntryInteraction .../>` element and delete the copy at the end of the paragraph.
+- Convert backtick pairs to `<code>...</code>` (the renderer shows it as monospace). The box can sit inside `<code>`.
+- Questions with two `___` but one input need a second interaction and `RESPONSE_2` declaration with its own mapping; leave them for manual editing.
+
+Do not set `expectedLength` on the box: it hints at the length of the answer.
+
+### Notes for 21.x
+
+- The guide documents Tomcat 10.1, Java 17 and PostgreSQL 18. This server runs Tomcat 11.0.8 with Java 17 and works on 21.0.5.
+- 21.0 and later recommend delivering user-provided content (HTML pages, CPs, SCORM) from a second domain via `server.content.domainname=<other-domain>` in `olat.local.properties`, with a matching reverse-proxy vhost. It must not be a subdomain of `server.domainname`. Not configured here.
+- Hibernate prints thousands of `deprecated annotation [jakarta.persistence.Temporal]` warnings at startup; they are harmless.
+- Tomcat's `catalina.out` shows `Invalid character found in method name` exceptions when scanners send TLS to the plain HTTP port 8088; also harmless.
