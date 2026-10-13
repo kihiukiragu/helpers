@@ -419,6 +419,18 @@ Do not set `expectedLength` on the box: it hints at the length of the answer.
 
 The original import ran question text through Markdown, which swallowed backslashes (`\d` became `d`), `*...*` pairs and `_`. Check any new import for this. In the RegEx test, 40 item files were repaired on 2026-10-12: write the backslash literally in `<p>`/`<simpleChoice>` text, wrap regex in stems in `<code>`, and set `caseSensitive="true"` on fill-in answers (`\d` vs `\D`). Do not add bare-letter alternatives (`d` for `\d`); they teach the wrong thing.
 
+### Content review (2026-10-12)
+
+All seven quizzes were reviewed and corrected on disk with the procedure above (RegEx, PostgreSQL, Bash, Git, Linux Admin, Kenya DPA, Cyber-Security). Things to keep in mind for future edits:
+
+- Questions removed from a test (wrong or duplicate): Git "git reset soft HEAD", PostgreSQL `DROP DATABASE ... CASCADE` and the `SET` role attribute, DPA Data Protection Tribunal. The question files stay on disk; `MAXSCORE` was lowered by 10 each.
+- Some folders hold two item files for the same question (a duplicate that was dropped from the test). Edit every file in the folder so they stay identical.
+- Kenya DPA questions were checked against the Act and the Data Protection (General) Regulations, 2021, not against GDPR. Points that differ from GDPR: DPO designation is optional ("may", s.24), breach notification to data subjects needs a "real risk of harm" and to the Commissioner is within 72 hours (s.43), no Tribunal (appeals go to the High Court, s.64), administrative fines are KES 5 million or 1% of turnover whichever is lower (s.63), general penalty is KES 3 million or 10 years (s.73), access requests are due in 7 days and rectification/erasure in 14 days (Regulations), portability in 30 days (s.38).
+- Verify PostgreSQL claims against the running version (18.x here): `VIRTUAL` generated columns exist only from 18; `TRUNCATE` resets sequences only with `RESTART IDENTITY`.
+- Markdown stripped backslashes from the original RegEx import (`\d`, `\b`, `\.`); they were restored, and bare-letter answers such as `d` for `\d` were removed so students learn the real syntax.
+- Structure check after editing: every `responseIdentifier`/choice reference resolves, correct answers point at existing choice ids, and `MAXSCORE` equals the sum of item points. This caught RegEx "grep whole words" (one choice only, now `-w`/`--word-regexp` plus three distractors) and Bash `ssh-keygen` (blank answer scored; now `-N`/`N`, case-sensitive).
+- Not changed, for a later decision: DPA transfer questions that mention "standard contractual clauses" (Kenyan law says "legal instrument" and binding corporate rules).
+
 ### Notes for 21.x
 
 - The guide documents Tomcat 10.1, Java 17 and PostgreSQL 18. This server runs Tomcat 11.0.8 with Java 17 and works on 21.0.5.
