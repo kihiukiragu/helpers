@@ -16,7 +16,7 @@ Download an ISO containing the last version of Debian which also bundles non-fre
 > [!IMPORTANT]
 > If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
 ```
-wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-13.0.0-amd64-DVD-1.iso
+wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-13.7.0-amd64-DVD-1.iso
 ```
 
 ### Installation
@@ -51,7 +51,7 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
         - You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
         - Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
           ```
-          #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-12.7.0-amd64-DVD-1.iso /dev/sdc
+          #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-13.7.0-amd64-DVD-1.iso /dev/sdc
           cp debian-file.iso /dev/sdX
           sync #ensures files are securely copied
           ```
