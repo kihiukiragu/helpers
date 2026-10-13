@@ -429,6 +429,7 @@ All seven quizzes were reviewed and corrected on disk with the procedure above (
 - Verify PostgreSQL claims against the running version (18.x here): `VIRTUAL` generated columns exist only from 18; `TRUNCATE` resets sequences only with `RESTART IDENTITY`.
 - Markdown stripped backslashes from the original RegEx import (`\d`, `\b`, `\.`); they were restored, and bare-letter answers such as `d` for `\d` were removed so students learn the real syntax.
 - Structure check after editing: every `responseIdentifier`/choice reference resolves, correct answers point at existing choice ids, and `MAXSCORE` equals the sum of item points. This caught RegEx "grep whole words" (one choice only, now `-w`/`--word-regexp` plus three distractors) and Bash `ssh-keygen` (blank answer scored; now `-N`/`N`, case-sensitive).
+- Accepted answers were widened after comparing two students' attempts with the corrected quizzes: valid answers such as `jail.conf` for the fail2ban question, `su -`, `ufw -y`, `tail -n 10`, `\Z` = `end`, and `OR operator` were added. Answers are trimmed of surrounding spaces before matching, so only the key text matters. Compare past attempts with `qtiassessment/<repo id>/<identity id>_<timestamp>/assessmentResult.xml` under `olatdata/bcroot`.
 - Not changed, for a later decision: DPA transfer questions that mention "standard contractual clauses" (Kenyan law says "legal instrument" and binding corporate rules).
 
 ### Notes for 21.x
