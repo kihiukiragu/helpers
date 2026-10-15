@@ -21,11 +21,11 @@ You might want flexibility to be able to pick whatever a certain PostgreSQL vers
    ```
 2. Install psql server and client (this can be adjusted to install 15,16, or even 18 etc.): 
    ```
-   sudo apt -y install postgresql postgresql-client`
+   sudo apt -y install postgresql postgresql-client
    ```
    OR
    ```
-   sudo apt -y install postgresql-17 postgresql-client17`
+   sudo apt -y install postgresql-17 postgresql-client-17
    ```
 3. Installing postgres in Linux results in a user `postgres` being created. Change to this user i.e. `postgres` and you can then start creating databases, tables and running SQL queries:
    - Change user:
@@ -76,13 +76,9 @@ If you have version 15 and 17 installed on the same server, it is possible to up
 > If not done right, this will delete all your databases running on the version you delete. Be careful with this!
 
 After installing a newer version e.g. you install postgresql-17 **AND** successfully upgrading to a new cluster, you might want to remove and purge older version postgresql-15:
-For zsh users (asterisk must be enclosed in quotes):
+Enclose the asterisk in quotes (works in zsh and bash, and stops the shell expanding it against local files):
 ```
-sudo apt remove --purge postgresql-'*'
-```
-For bash users:
-```
-sudo apt remove --purge postgresql-*
+sudo apt remove --purge 'postgresql-*'
 ```
 
 ## Learning SQL using PostgreSQL
@@ -98,7 +94,6 @@ Let's say you have the following tables:
 ```mermaid
 erDiagram
     tc_devices ||--o{ tc_positions : "has"
-    tc_positions }o--|| tc_devices : "belongs to"
 
     tc_devices {
         integer id
@@ -135,7 +130,7 @@ WHERE position.servertime > TIMESTAMP '2025-05-27 13:07:30' and
 ```
 
 However, we would like to view what the `name` (License Plate number) field of the device that's sent the position record. To do this we can take advantage of the relationship between these two tables.
-Every position record has a field `deviceid` which is the primary key field representing the given device responsible for this data.
+Every position record has a field `deviceid` which is a foreign key referencing `tc_devices.id`, i.e. the device responsible for this data.
 
 We can therefore combine these two tables using a JOIN query (LEFT JOIN) in this case to look as follows:
 ```sql
@@ -154,7 +149,7 @@ In the above query, we are able to see the license plates for each position data
 
 There are two common JOINs used in PostgreSQL:
 - `LEFT JOIN` - joins two tables with all the rows from the left table being returned and matched to the right and null values for unmatched rows on the right table.
-  The full name for this type of JOIN is `LEFT OUTER JOIN` but the `` is optional and usually left out. If you do NOT need to see null values from the right table,
+  The full name for this type of JOIN is `LEFT OUTER JOIN` but the `OUTER` keyword is optional and usually left out. If you do NOT need to see null values from the right table,
   consider using a plain `INNER JOIN` to be discussed below.
 - `INNER JOIN` - joins two tables with all the rows from the left table being returned and matched to the right and unmatched rows on the right table are omitted from the query.
   This is more efficient when you only need rows matching those on the right. It is commonly written as `JOIN` but adding the `INNER` keyword makes it more readable.
@@ -164,11 +159,11 @@ There are two common JOINs used in PostgreSQL:
 Window functions provide the capability to execute calculations across a set of rows that are related to the current row or row in the query.
 This avoids the need to group the rows to accomplish the same. Some examples are:
 - SUM() - sums up the row indicated
-- AVE() - averages the row indicated
+- AVG() - averages the row indicated
 - Ranking functions:
   - ROW_NUMBER() - provides a unique rank even when ties are present. Might not be ideal when rows have ties.
-  - RANK() - provides a rank and gives a tie if rows have same value.
-  - DENSE_RANK() - similar to RANK() but skips ranks when there are ties eg. `1,2,2,4`.
+  - RANK() - provides a rank and gives a tie if rows have same value, then skips ranks after the tie eg. `1,2,2,4`.
+  - DENSE_RANK() - similar to RANK() but does not skip ranks after a tie eg. `1,2,2,3`.
 
 ### Common Table Expressions
 A Common Table Expression is a feature in SQL databases to temporarily store a sub-query and use the result in the main `SELECT` query.
@@ -255,12 +250,15 @@ Roles can also be used to manage permissions of a group of users that need the s
 2. Create Operation staff users and add them to this role e.g.:
    Bash:
    ```
-   psql -c "CREATE USER jdoe WITH ENCRYPTED password 'jdoe1234';"
+   psql -c "CREATE USER jdoe;"
+   psql -c "GRANT role_operation TO jdoe;"
+   psql -c "\password jdoe"   # prompts for the password, so it is not left in shell history
    ```
    OR in psql or pgAdmin:
    ```sql
-   CREATE USER jdoe WITH ENCRYPTED password 'jdoe1234';
+   CREATE USER jdoe;
    GRANT role_operation TO jdoe;
+   \password jdoe
    ```
 
 ### Authentication Modes
@@ -269,7 +267,8 @@ Roles can also be used to manage permissions of a group of users that need the s
 
 - Peer & Ident
 - `md5` vs `scram-sha-256`
-    - `md5` has been used for years but has some potential security flaws e.g. collision attacks.
+    - `md5` has been used for years but is weaker: a stolen stored hash is enough to log in, and PostgreSQL 18 deprecates md5 password authentication.
+    - `scram-sha-256` has been the default `password_encryption` since PostgreSQL 14. On older versions the commented default below is `md5`.
     - `scram-sha-256`:
         - Edit postgresql.conf  (eg `sudo vi /etc/postgresql/17/main/postgresql.conf`) and change:
           ```
@@ -287,7 +286,7 @@ Roles can also be used to manage permissions of a group of users that need the s
           ```
           host    all             all             127.0.0.1/32            scram-sha-256
           ```
-        - Restart postgres: `sudo service postgresql restart`.
+        - Reload postgres (a restart is not needed for these two settings): `sudo service postgresql reload`.
         - Check to see if the encryption method has changed:
           ```sql
           SHOW password_encryption;
@@ -365,10 +364,10 @@ pgAdmin is a helpful tool to easily run queries on the fly similar to psql but c
   ```
 - You might need to edit your local `pg_hba.conf` file e.g. `vi /etc/postgresql/17/main/pg_hba.conf` and add the following line (right below the line `# IPv4 local connections:` line):
   ```
-  host    all             all             127.0.0.1/32            trust
+  host    all             all             127.0.0.1/32            scram-sha-256
   ```
 
-## Access a Remove Database via SSH Tunneling
+## Access a Remote Database via SSH Tunneling
 ### Using Terminal
 
 Create an ssh tunnel:
@@ -387,20 +386,20 @@ The safer way to access a remote database is to use [SSH Tunneling](https://en.w
 - Database port (typically port #5432) can thus be locked down to internal server use only.
 
 Steps:
-- Ensure postgres is installed on the ssh tunnel host (ie the PC you're currently using)
+- Ensure pgAdmin4 is installed on your own PC. The tunnel host below is the remote server, not your PC
 - Start pgAdmin4 (If using a menu based Desktop Environment e.g. xfce or Cinnamon, it will likely be in the Applications menu under 'Development')
 - Create a new Server
   - General tab: Give the connection a name of your choice eg `customer-db-ssh-tunnel`
   - Connection tab:
-    - Host name/address (host is the PC you are using): `localhost`
-    - Port (default port on your local PC): `5432`
+    - Host name/address (as seen from the tunnel host, i.e. the remote server): `localhost`
+    - Port (PostgreSQL port on the remote server): `5432`
     - Maintenance database (enter the database that you have been granted access to remotely): `customer`
-    - Username (your username on the local PC): `pomollo`
+    - Username (your PostgreSQL username on the remote database): `pomollo`
   - SSH Tunnel tab:
     - Tunnel host (remote server where the db resides): `server.remote.example.com`
     - Tunnel port (usually 22 unless it has been configured otherwise): `22`
     - Username (your username on remote server): `pomollo`
-    - Identity file (your private ssh key on your local PC): `/home/pomollo/.ssh/id_rsa`
+    - Identity file (your private ssh key on your local PC): `/home/pomollo/.ssh/id_ed25519`
   - Click on `Save`
 - Connect to the server. You will be prompted to enter 2 passwords:
   - SSH Identity file password - if your ssh key contains a passphrase/password, enter it here
