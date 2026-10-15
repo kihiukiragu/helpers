@@ -432,6 +432,18 @@ All seven quizzes were reviewed and corrected on disk with the procedure above (
 - Accepted answers were widened after comparing two students' attempts with the corrected quizzes: valid answers such as `jail.conf` for the fail2ban question, `su -`, `ufw -y`, `tail -n 10`, `\Z` = `end`, and `OR operator` were added. Answers are trimmed of surrounding spaces before matching, so only the key text matters. Compare past attempts with `qtiassessment/<repo id>/<identity id>_<timestamp>/assessmentResult.xml` under `olatdata/bcroot`.
 - Not changed, for a later decision: DPA transfer questions that mention "standard contractual clauses" (Kenyan law says "legal instrument" and binding corporate rules).
 
+### Quiz updates after module changes (2026-10-15)
+
+22 items edited from `QUIZ-UPDATES.md` (Linux 4, Bash 6, Git 1, Kenya DPA 11) with the procedure above; backups `~/backup/*d20261015.t122000*` and `*t122721*` (the `items.<ts>/` folder holds the original XML of each item). Notes for future edits:
+
+- Converting a single-choice item to multiple choice: set `cardinality="multiple"` on the `responseDeclaration` only (the `FEEDBACKBASIC` outcome also says `single`), list every correct id in `correctResponse`, give correct choices `10/n` points and wrong ones `-10/n`, and set `maxChoices` to at least the number of correct answers. The points of the correct choices must sum to the item's `MAXSCORE` (10), or students cannot reach full marks.
+- apt: `full-upgrade` and `dist-upgrade` are the same command, and both `.list` (one-line) and `.sources` (deb822, default on Debian 13) are valid source file extensions; the quizzes accept both.
+- `history` options are bash only (zsh `history 5` means "from entry 5"). `--write` and `--clear` are not valid; `-a` and `-w` both write history to the file; `-e` is not an option, timestamps come from `HISTTIMEFORMAT`.
+- Kenya DPA: security is a duty (ss. 41, 42), not a "principle" (s. 25 lists those); cross-border safeguards are a "legal instrument" or binding corporate rules, not SCCs; the controller-processor contract needs a written contract, instructions only from the controller and binding controller obligations (s. 42); a DPIA is needed where processing is likely to result in high risk (s. 31). The General Regulations 2021 (Legal Notice 263, Gazette Supplement 236) have no records-of-processing duty; the Act requires only a breach record (s. 43(8)), so the two "records of processing" questions now ask about that.
+- Confirmed in the General Regulations: access within 7 days (reg. 9(4)), rectification within 14 days (reg. 10(4)), erasure within 14 days (reg. 12(3)). DPA #133 and #151 rely on these and were not changed.
+- Not changed: DPA #64, the Cyber-Security quiz (annual staff training, to be audited separately), and the RegEx `(?i)^apple` note.
+- Check Tomcat is actually running before relying on the site: it was found stopped (since 2026-10-13) at the start of this work.
+
 ### Notes for 21.x
 
 - The guide documents Tomcat 10.1, Java 17 and PostgreSQL 18. This server runs Tomcat 11.0.8 with Java 17 and works on 21.0.5.
