@@ -32,10 +32,10 @@ Explanation:
   - Correct choices are the first 4 choices indicated by the corresponding `2.5` i.e. each correct choice earns partial credit.
   - Wrong choices are the last two indicated by the corresponding `-2.5`i.e. choosing a wrong answer deducts 2.5 points.
 - Second question:
-    - The question type is MC - [Single-choice](https://docs.openolat.org/manual_user/learningresources/Test_question_types/#sc)
+    - The question type is SC - [Single-choice](https://docs.openolat.org/manual_user/learningresources/Test_question_types/#sc)
     - Maximum points for this question are: 10 points
-    - Correct choices are the first 4 choices indicated by the corresponding `1`.
-    - Wrong choices are the last two indicated by the corresponding `0`.
+    - The correct choice is the first one, indicated by `10` (full points).
+    - The other three choices are wrong, indicated by `0`.
 
 ## Creating a Course/Test
 - Authoring

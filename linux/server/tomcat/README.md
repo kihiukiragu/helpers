@@ -11,18 +11,25 @@ sudo useradd -m -d /opt/tomcat -U -s /bin/false tomcat
 ```
 
 ## Install Tomcat
+archive.apache.org keeps every release (downloads.apache.org only hosts the current ones). Verify the checksum before extracting:
 ```
 cd /opt
-wget https://downloads.apache.org/tomcat/tomcat-11/v11.0.8/bin/apache-tomcat-11.0.8.tar.gz
-tar -xzvf apache-tomcat-11.0.8.tar.gz -C /opt/tomcat --strip-components=1
+sudo wget https://archive.apache.org/dist/tomcat/tomcat-11/v11.0.8/bin/apache-tomcat-11.0.8.tar.gz
+sudo wget https://archive.apache.org/dist/tomcat/tomcat-11/v11.0.8/bin/apache-tomcat-11.0.8.tar.gz.sha512
+sha512sum -c apache-tomcat-11.0.8.tar.gz.sha512
+sudo tar -xzvf apache-tomcat-11.0.8.tar.gz -C /opt/tomcat --strip-components=1
+sudo chown -R tomcat:tomcat /opt/tomcat
 ```
 
 ## Create systemd Service
 
+A quoted heredoc keeps the quotes (systemd needs them around values containing spaces) and `tee` runs with sudo:
 ```
-echo "[Unit]
-Description="Tomcat Service"
+sudo tee /etc/systemd/system/tomcat.service << 'EOF'
+[Unit]
+Description=Tomcat Service
 After=network.target
+
 [Service]
 Type=forking
 User=tomcat
@@ -35,24 +42,32 @@ Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
 Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
 ExecStart=/opt/tomcat/bin/startup.sh
 ExecStop=/opt/tomcat/bin/shutdown.sh
+
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/tomcat.service
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable --now tomcat
 ```
 
 ## Install Apache
 
-Follow this [link](https://www.rosehosting.com/blog/how-to-install-apache-tomcat-on-debian-11/)
+Install Apache and enable the modules the vhost below needs (the [Debian 11 guide](https://www.rosehosting.com/blog/how-to-install-apache-tomcat-on-debian-11/) is only a reference):
+```
+sudo apt install apache2
+sudo a2enmod ssl proxy proxy_http
+```
 
 ## Apache Conf
 
 ```
 <VirtualHost *:443>
-    ServerName cyber.pontypriddholdings.com
+    ServerName tomcat.example.com
     DocumentRoot /opt/tomcat
 
     SSLEngine on
-    SSLCertificateFile /etc/letsencrypt/live/cyber.pontypriddholdings.com/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/cyber.pontypriddholdings.com/privkey.pem
+    SSLCertificateFile /etc/letsencrypt/live/tomcat.example.com/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/tomcat.example.com/privkey.pem
 
     # Configure proxy connection timeout
     ProxyTimeout 300
@@ -63,21 +78,16 @@ Follow this [link](https://www.rosehosting.com/blog/how-to-install-apache-tomcat
 </VirtualHost>
 
 <VirtualHost *:80>
-    ServerName cyber.pontypriddholdings.com
-    Redirect permanent / https://cyber.pontypriddholdings.com
+    ServerName tomcat.example.com
+    Redirect permanent / https://tomcat.example.com
 </VirtualHost>
 ```
 
 ## Enable an Admin user
 
-Note: The roles and password have to be set for it to work.
+Note: The roles and password have to be set for it to work. Grant only the roles needed (`manager-gui` for the web UI); add `manager-script`, `manager-jmx`, `manager-status` or the `admin-*` roles only if a tool needs them.
 ```shell
   <role rolename="manager-gui"/>
-  <role rolename="manager-script"/>
-  <role rolename="manager-jmx"/>
-  <role rolename="manager-status"/>
-  <role rolename="admin-gui"/>
-  <role rolename="admin-script"/>
-  <user username="admin" password="<must-be-changed>" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-gui,admin-script"/>
+  <user username="admin" password="<must-be-changed>" roles="manager-gui"/>
 ```
 

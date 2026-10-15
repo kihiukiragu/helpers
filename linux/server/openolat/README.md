@@ -43,10 +43,13 @@ ln -s tomcat/bin/startup.sh start
 ln -s tomcat/bin/shutdown.sh stop
 ```
 
-### Create setevn.sh
+### Create setenv.sh
+
+The quoted heredoc writes the file as-is (nothing is expanded while writing). `-Duser.timezone` sets the zone used for test timestamps; change it to your local zone.
 
 ```
-echo "CATALINA_HOME=~/tomcat
+cat << 'EOF' > ~/bin/setenv.sh
+CATALINA_HOME=~/tomcat
 CATALINA_BASE=~
 JRE_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 CATALINA_PID=~/run/openolat.pid
@@ -63,7 +66,8 @@ CATALINA_OPTS=" \
 -Djava.security.egd=file:/dev/urandom \
 -XX:+HeapDumpOnOutOfMemoryError \
 -XX:HeapDumpPath=. \
-" > ~/bin/setenv.sh
+"
+EOF
 ```
 
 ### server.xml

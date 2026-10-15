@@ -3,7 +3,8 @@ You can use your home Debian PC or laptop as a server. You can use this for test
 
 ## (Optional) Securing SSH service
 > [!WARNING]
-> Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session
+> Always have an extra ssh session open when making sshd changes in case something goes wrong, you can undo on the other session.
+> Before disabling password authentication, confirm you can already log in with an SSH key (`ssh-copy-id user@server`), or you will lock yourself out.
 1. Secure access to your server by adding a custom sshd configurations (NB: Avoid editing `/etc/ssh/sshd_config` as that gets overwritten during system updates):
    - Edit configuration file: `sudo vi /etc/ssh/sshd_config.d/custom-sshd.conf`
      - Disable Root login: `PermitRootLogin no`
@@ -34,28 +35,20 @@ You can use your home Debian PC or laptop as a server. You can use this for test
 3. Restart sshd service: `sudo service sshd restart`
 
 ## Server Applications Installation:
-1. Install certbot & nginx plugin (for TLS certs):
-   1. Install certbot and python certbot nginx plugin:
-      ```
-      apt install certbot python-certbot-nginx
-      ```
-   2. Generate certificate as follows: `certbot --nginx certonly -d mydomainname.com`
-2. Install Nginx:
+1. Install Nginx:
    1. Install: `sudo apt install nginx`
    2. Adjust Firewall:
       1. Allow HTTP & HTTPS: `sudo ufw allow 'Nginx Full'`
       2. Allow SSH: `sudo ufw allow ssh`
-      2. Check status: `ufw status`
+      3. Check status: `sudo ufw status`
    3. Check nginx status: `systemctl status nginx`
-
-## Install & nginx & certbot and SSL certs
-1. Install nginx: `sudo apt install nginx`
-2. Install certbot python plugin: `sudo apt install python3-certbot-nginx`
-3. Generate SSL certs: `certbot --nginx certonly -d domain.example.com`
+2. Install certbot & nginx plugin (for TLS certs):
+   1. Install certbot and the certbot nginx plugin: `sudo apt install certbot python3-certbot-nginx`
+   2. Generate certificate as follows: `sudo certbot --nginx certonly -d mydomainname.com`
 
 ## (Optional) Allow a User to sudo without password
 > [!WARNING]
 > This option should ONLY be used if you fully understand the implications.
-1. Create a file in `/etc/sudoers.d`
-2. Edit the file and put the following rule: `username ALL=(ALL) NOPASSWD: ALL`
+1. Create the file with `sudo visudo -f /etc/sudoers.d/username` (visudo checks the syntax; a broken sudoers file can lock you out of sudo)
+2. Put the following rule in it: `username ALL=(ALL) NOPASSWD: ALL`
 
