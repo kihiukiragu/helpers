@@ -366,6 +366,7 @@ pgAdmin is a helpful tool to easily run queries on the fly similar to psql but c
   ```
   host    all             all             127.0.0.1/32            scram-sha-256
   ```
+  Do not use `trust` here: it lets any local user connect as any role, including the `postgres` superuser, without a password.
 
 ## Access a Remote Database via SSH Tunneling
 ### Using Terminal
@@ -407,17 +408,29 @@ Steps:
 
 
 ## TimescaleDB
-Add repo:
+> [!NOTE]
+> Repository details change; check the current [Timescale install docs](https://docs.timescale.com/self-hosted/latest/install/installation-linux/) if a step fails.
+
+Add the repo with a signed keyring (instead of piping an install script into `sudo bash`):
 ```
-curl -s https://packagecloud.io/install/repositories/timescale/timescaledb/script.deb.sh | sudo bash
+curl -fsSL https://packagecloud.io/timescale/timescaledb/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/timescaledb.gpg
+echo "deb [signed-by=/usr/share/keyrings/timescaledb.gpg] https://packagecloud.io/timescale/timescaledb/debian/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/timescaledb.list
+sudo apt update
 ```
 
 Install timescale
 ```
-sudo apt install timescaledb-2-postgresql-17
+sudo apt install timescaledb-2-postgresql-17 timescaledb-tools
 ```
 
-Upgrade cluster from 16 to 17:
+Tune postgresql.conf (this sets `shared_preload_libraries = 'timescaledb'`), restart and enable the extension in each database that needs it:
+```
+sudo timescaledb-tune
+sudo service postgresql restart
+psql -d <database> -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
+```
+
+Upgrade cluster from 16 to 17 (see [Upgrading/Migrating Databases](#upgradingmigrating-databases); `pg_dropcluster 17` deletes the new, empty 17 cluster, so only run it if it holds no data):
 ```
 sudo pg_dropcluster 17 main --stop
 sudo pg_upgradecluster 16 main
