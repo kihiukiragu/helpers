@@ -12,12 +12,18 @@ Why Debian GNU/Linux? Debian might be right for you if you:
 Download an ISO containing the last version of Debian which also bundles non-free firmware from this link: https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ (scroll down to the bottom of page and download .iso file)
 
 1. Windows - download it using your preferred download manager or browser (Chrome / Firefox)
-2. Linux command line download:
-> [!IMPORTANT]
-> If the URL below in the wget statement is broken go to https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/ and download the `.iso` file.
-```
-wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-13.7.0-amd64-DVD-1.iso
-```
+2. Linux command line download (looks up the current file name, so it keeps working after point releases):
+   ```
+   BASE=https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd
+   wget -c $BASE/SHA512SUMS
+   ISO=$(awk '$2 ~ /-DVD-1\.iso$/ {print $2}' SHA512SUMS)
+   wget -c $BASE/$ISO
+   ```
+3. Verify the download (on Windows use `certutil -hashfile <file>.iso SHA512` and compare with the `SHA512SUMS` file). Expect `<file>.iso: OK`:
+   ```
+   sha512sum -c --ignore-missing SHA512SUMS
+   ```
+   To also verify the signature of `SHA512SUMS` see https://www.debian.org/CD/verify
 
 ### Installation
 #### Steps
@@ -46,14 +52,16 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
           ├─nvme0n1p2 259:2    0     1K  0 part
           ...
           ```
-          Where in the above case, the USB drive is `sdb1`
+          Removable disks have `1` in the `RM` column (not shown above); here `sdb` and `sdc` are both removable.
 
-        - You might need to format the usb drive. If your PC or Laptop is UEFI only. You will need the USB formatted to `FAT32` to make it UEFI compatible.
-        - Linux command to write image to USB drive - (https://www.debian.org/releases/bookworm/amd64/ch04s03.en.html)
+        - Linux command to write image to USB drive - (https://www.debian.org/releases/trixie/amd64/ch04s03.en.html)
+          > [!WARNING]
+          > Everything on the target drive is erased. Use the whole disk (`/dev/sdX`), never a partition (`/dev/sdX1`). Unplug the USB drive, run `lsblk`, plug it in and run `lsblk` again: the disk that appeared is the one to use. In the example above `sdb1` is mounted at `/media/kkiragu/docs` so it holds files; the stick to write is `sdc`.
+
+          Unmount any mounted partitions of the drive, then write the image (no formatting needed; the image replaces the partition table and is bootable on both BIOS and UEFI):
           ```
-          #NB: Verify sdX is the usb drive you wish to create a bootable from e.g. cp debian-13.7.0-amd64-DVD-1.iso /dev/sdc
-          cp debian-file.iso /dev/sdX
-          sync #ensures files are securely copied
+          sudo umount /dev/sdX1
+          sudo dd if=debian-13.X.0-amd64-DVD-1.iso of=/dev/sdX bs=4M status=progress conv=fsync
           ```
 
 2. Check boot sequence in your BIOS settings, ensure you can boot using USB/DVD and that it's first option.
@@ -65,13 +73,13 @@ wget -c https://cdimage.debian.org/cdimage/release/current/amd64/iso-dvd/debian-
    - Once sure, press enter to set up the partition.
    - Select "Finish partitioning and write changes to disk"
 5. Proceed with installation.
-6. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. This user will be a `sudoer` by default.
+6. Remember to note down the root credentials (username & password) during installations. You will also be prompted to create a new primary user. If you left the root password empty, this user is added to the `sudo` group; if you set a root password, add the user yourself (log in as root and run `usermod -aG sudo username`).
 7. Once installation is complete, proceed to configure your OS for updates etc.
 
 ### Configuration of OS for Updates and Package Installations
 > [!NOTE]
 > During Debian installation, you created a primary user/username. Those credentials will come in handy in the next steps.
-> If you're new to Linux and command line, you likely will want to substitute any instances of the editor usage of `vi` with beginner editors e.g. `gedit` or `kwrite` or `nano`.
+> If you're new to Linux and command line, you likely will want to substitute any instances of the editor usage of `vi` with beginner editors e.g. `gedit` or `nano`.
 > Command line newbies - when prompted to enter a password, nothing will appear on the screen. Don't panic!
 
 Your Debian installation needs to be configured to pull and apply updates in the future:
@@ -89,61 +97,56 @@ Your Debian installation needs to be configured to pull and apply updates in the
 3. Test if you actually have root privileges:
    1. Enter command (you will be prompted to enter your password): `sudo su - root`
    2. If no error messages occur, then that means you’re now root!
-   3. Install gedit, and kwrite:
+   3. Install gedit (desktop only):
       ```
-      sudo apt install gedit kwrite
+      sudo apt install gedit
       ```
 4. Editing application options:
    - gedit - ideal for beginners OR
    - vi/vim - shell application that's ideal for experienced Linux users
       - Install vim: For some reason vim is usually not installed fully: `sudo apt install vim`
       - Start: `vi /path/to/file/to/be/edited`
-5. Edit sources file located at: `/etc/apt/sources.list`
-   1. Backup `sources.list` in case something goes awry:
+5. Edit the APT sources. Debian 13 uses the deb822 format: the default file is `/etc/apt/sources.list.d/debian.sources` and `/etc/apt/sources.list` normally holds only comments.
+   1. Backup the sources in case something goes awry:
       ```
-      if [ ! -d ~/backup ]; then
-          mkdir ~/backup
-      fi
-      cp /etc/apt/sources.list ~/backup/sources.list.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
+      mkdir -p ~/backup
+      cp /etc/apt/sources.list.d/debian.sources ~/backup/debian.sources.d$(date +"%Y%m%d").t$(date +"%H%M%S").bak
       ```
-   2. Use vi editor to make the changes:
+   2. If you installed from the DVD and a `deb cdrom:` line exists (check with `grep -r cdrom /etc/apt/sources.list /etc/apt/sources.list.d/`), delete or comment it out, otherwise `apt update` asks for the disc.
+   3. Open the file:
       ```
-      sudo vi /etc/apt/sources.list
+      sudo vi /etc/apt/sources.list.d/debian.sources
       ```
-   3. NB: Before editing, your `/etc/apt/sources.list` will look as follows:
+   4. A default install looks like this:
       ```
-      deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+      Types: deb
+      URIs: http://deb.debian.org/debian
+      Suites: trixie trixie-updates
+      Components: main
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-      deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
-
-      deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-
-      # Only add the backports if they already exist
-      deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+      Types: deb
+      URIs: http://deb.debian.org/debian-security
+      Suites: trixie-security
+      Components: main
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
       ```
-   4. You could use the following sed statement to update the sources.list file (NB: Add the `-i` flag when ready to commit. This might also need to be tweaked if you have backports):
-      ```shell
-      sed 's/bookworm/trixie/' /etc/apt/sources.list
+   5. Add `contrib non-free non-free-firmware` to `Components` (and `deb-src` to `Types` if you need source packages). Feel free to choose an alternative mirror in `URIs` instead of the default `deb.debian.org` - doesn't make much difference if you have a good internet connection:
       ```
-   5. It should look like (feel free to choose an alternative mirror site other than the default `deb.debian.org` based on your geographical location - doesn't make much difference if you have a good internet connection):
+      Types: deb deb-src
+      URIs: http://deb.debian.org/debian
+      Suites: trixie trixie-updates
+      Components: main contrib non-free non-free-firmware
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+      Types: deb deb-src
+      URIs: http://deb.debian.org/debian-security
+      Suites: trixie-security
+      Components: main contrib non-free non-free-firmware
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
       ```
-      deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
-
-      deb http://deb.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
-
-      deb http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
-
-      # Only add the backports if they already exist
-      deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
-      deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
-      ```
+   6. Only if you want backports, add `trixie-backports` to `Suites` of the first stanza (the suite must match your release, not an older one).
+   7. If you still have one-line `.list` files (e.g. from an upgrade or third-party repositories), `sudo apt modernize-sources` converts them to `.sources` and keeps `.list.bak` copies.
 
 6. Update your Debian OS installation:
    - Fetch latest version of the package list from Debian repo and 3rd party repos:
@@ -157,15 +160,15 @@ Your Debian installation needs to be configured to pull and apply updates in the
 
 ### Older Debian Versions e.g. Stretch, Buster & Bullseye
 
+> [!NOTE]
+> Stretch, Buster and Bullseye are end of life and now live on `archive.debian.org`. The archive's `Release` files have expired, so add `-o Acquire::Check-Valid-Until=false` to `apt update`. This section is kept for reference only.
+
 #### Update old instance of Bullseye OR (Upgrade from Debian 10.X Buster to Debian 11.X Bullseye)
 
 ```
-deb http://archive.debian.org/debian/ buster-updates main contrib non-free
-deb-src http://archive.debian.org/debian/ buster-updates main contrib non-free
-deb http://archive.debian.org/debian buster main contrib non-free
-deb-src http://archive.debian.org/debian buster/updates main contrib non-free
-deb http://archive.debian.org/debian-security/ buster/updates main contrib non-free
-deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
+deb http://archive.debian.org/debian bullseye main contrib non-free
+deb http://archive.debian.org/debian bullseye-updates main contrib non-free
+deb http://archive.debian.org/debian-security bullseye-security main contrib non-free
 ```
 
 #### Update old instance of Buster OR (Upgrade from Debian 9.X Stretch to Debian 10.X Buster)
@@ -174,7 +177,7 @@ deb-src http://archive.debian.org/debian-security/ buster/updates main contrib n
 deb http://archive.debian.org/debian/ buster-updates main contrib non-free
 deb-src http://archive.debian.org/debian/ buster-updates main contrib non-free
 deb http://archive.debian.org/debian buster main contrib non-free
-deb-src http://archive.debian.org/debian buster/updates main contrib non-free
+deb-src http://archive.debian.org/debian buster main contrib non-free
 deb http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 deb-src http://archive.debian.org/debian-security/ buster/updates main contrib non-free
 ```
@@ -197,9 +200,14 @@ To ensure Jane resets the password on first login or password attempt:
 chage -d 0 jdoe
 ```
 
-OPTIONAL - You can also create ssh keys for this new user if they will require for ssh authentication later. Steps:
+OPTIONAL - If the new user will use ssh key authentication later. Steps:
 1. Switch to the new user: `sudo su - jdoe`
-2. Run: `ssh-keygen -t ecdsa`. This also creates the folder `.ssh` with the necessary permissions. Though not recommended, do not change any default option or enter any passphrase.
+2. Prefer that the user generates their own key pair on their own machine (`ssh-keygen -t ed25519`, with a passphrase) and sends you only the public key (`~/.ssh/id_ed25519.pub`), so the private key never exists on the server. Create the folder and install the key:
+   ```
+   mkdir -p ~/.ssh && chmod 700 ~/.ssh
+   vi ~/.ssh/authorized_keys   # paste the public key
+   chmod 600 ~/.ssh/authorized_keys
+   ```
 
 ## Terminal Application Customizations
 
@@ -214,23 +222,18 @@ This is highly recommended for newbies to the command line.
    sudo apt install zsh curl git fonts-powerline powerline
    ```
 
-   OR for Fedora
-   ```
-   sudo dnf install zsh curl git powerline
-   ```
-
-2. Change to desired user which you want to install oh-my-zsh  e.g.: `su kkiragu`
+2. Change to the user which you want to install oh-my-zsh e.g.: `su - jdoe`
 3. Run oh my zsh install script:
    ```
    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
    ```
-4. Install theme e.g. powerlevel9k:
+4. Install theme e.g. powerlevel9k (no longer maintained; its successor is [powerlevel10k](https://github.com/romkatv/powerlevel10k), which uses a different `ZSH_THEME` value and `POWERLEVEL10K_*` settings):
    ```
    git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
    ```
 5. Run the following (NB: This updates `.zshrc` file):
    ```
-   sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
+   sed -i 's/\(ZSH_THEME="robbyrussell"\)/#\1\nZSH_THEME="powerlevel9k\/powerlevel9k"/g' ~/.zshrc
    ```
 6. Re-run steps 3 -> 5 for other users
 7. To make zsh (oh-my-zsh) default, log out completely and log back in for changes to take effect.
@@ -248,7 +251,7 @@ This is highly recommended for newbies to the command line.
    EOF
    );
 
-   echo $strPowerlevel9k >> ~/.zshrc
+   echo "$strPowerlevel9k" >> ~/.zshrc
    ```
 
 9. If you’ll be using nvm to install and manage node/npm, add the following to the .zshrc file:
@@ -256,11 +259,11 @@ This is highly recommended for newbies to the command line.
    export NVM_DIR=~/.nvm
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
    ```
-10. sudo apt-get install powerline
+10. Start the powerline daemon with your session (installed in step 1):
     ```
-    sudo symlink /etc/systemd/user/default.target.wants/powerline-daemon.service → /usr/lib/systemd/user/powerline-daemon.service.
+    systemctl --user enable --now powerline-daemon.service
     ```
-11. For user postgres (or root): Install but don’t set it as default. Then start by:l0
+11. For user postgres (or root): Install but don’t set it as default. Then start by:
 
     ```
     sudo -i -u postgres zsh
@@ -281,9 +284,9 @@ Debian comes with Firefox installed, but you can add Chrome if you like.
 2. Append the sources list to include the Google Chrome repository with the following command:
 
    ```
-   sudo zsh -c 'cat << "EOF" > /etc/apt/sources.list.d/google-chrome.list
-   deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main
-   EOF'
+   sudo tee /etc/apt/sources.list.d/google-chrome.list << 'EOF'
+   deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main
+   EOF
    ```
 3. Add a signing key as follows:
    ```
@@ -314,7 +317,7 @@ TBD
    sudo apt update
    sudo apt install libreoffice
    ```
-3. AnyDesk (Use the following link, then convert the keyring as shown later in this guide)- http://deb.anydesk.com/howto.html
+3. AnyDesk (use the following link; for key warnings see Key Ring Issues below)- http://deb.anydesk.com/howto.html
 
 ## (Troubleshooting) Post Debian Installation
 ###  Blank Screen
@@ -327,30 +330,17 @@ TBD
       2. Press ‘e’ to edit
       3. Look for a line ending in splash quiet and edit it so it has somewhere in the line: nomodeset
       4. If above does not work also try pci=nomsi
+   2. To make it permanent once installed: add the option to `GRUB_CMDLINE_LINUX_DEFAULT` in `/etc/default/grub` (e.g. `"quiet splash nomodeset"`), then run `sudo update-grub`.
 
 ###  Key Ring Issues
 
-Key ring issues - To resolve key ring warnings when you run `apt update`, do the following:
+`apt-key` and `/etc/apt/trusted.gpg.d/` are deprecated: a key placed there is trusted for every repository. Give each third-party repository its own keyring and reference it with `signed-by`, as in the Chrome section above (or `Signed-By:` in a `.sources` file).
 
-List existing keyrings using `apt-key list` but filter for the last 8 chars of the older existing key e.g.:
+To resolve key ring warnings from `apt update` for a repository (here AnyDesk; the key URL is also on http://deb.anydesk.com/howto.html):
 ```
-apt-key list | grep anydesk -B 3 | grep -Eo '[A-Z0-9]{4} [A-Z0-9]{4}$' | sed 's/ //g'
+curl -fsSL https://keys.anydesk.com/repos/DEB-GPG-KEY | sudo gpg --dearmor -o /usr/share/keyrings/anydesk.gpg
 ```
-
-Export existing key to `trusted.gpg.d` folder:
-
-```
-apt-key export 210976F2 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pgadmin.gpg
-apt-key export CDFFDE29 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/anydesk.gpg
-apt-key export 77E11517 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/php.gpg
-```
-
-Delete outdated or invalid keyrings:
-```
-apt-key del "DAC8....."
-```
-
-For `php`, if the above doesn't work, you might need to: delete and add the key again
+Then add `signed-by=/usr/share/keyrings/anydesk.gpg` to that repository's `deb` line (or `Signed-By:` in its `.sources` file) and remove any old copy of the key from `/etc/apt/trusted.gpg.d/` or `/etc/apt/trusted.gpg`.
 
 ## Additional Resources
 > [!TIP]
